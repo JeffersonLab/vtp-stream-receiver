@@ -84,19 +84,18 @@ public class VtpListeningServer {
             int payload_length = Integer.reverseBytes(dataInputStream.readInt());
             int compressed_length = Integer.reverseBytes(dataInputStream.readInt());
             int magic = Integer.reverseBytes(dataInputStream.readInt());
-            System.out.println(Integer.toHexString(magic));
-            int format_version = Integer.reverseBytes(dataInputStream.readInt());
-            int flags = Integer.reverseBytes(dataInputStream.readInt());
-            long record_number = Long.reverseBytes(dataInputStream.readLong());
-            long ts_sec = Long.reverseBytes(dataInputStream.readLong());
-            long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
+            if(Integer.toHexString(magic).equals("c0da2019")) {
+                int format_version = Integer.reverseBytes(dataInputStream.readInt());
+                int flags = Integer.reverseBytes(dataInputStream.readInt());
+                long record_number = Long.reverseBytes(dataInputStream.readLong());
+                long ts_sec = Long.reverseBytes(dataInputStream.readLong());
+                long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
 
-            long[] payload = Utility.readLtPayload(dataInputStream, payload_length);
 
-//            byte[] payload = new byte[(int)Integer.toUnsignedLong(payload_length)/2];
-//            dataInputStream.readFully(payload);
-//            dataInputStream.readFully(payload);
-//
+                byte[] payload = new byte[(int) Integer.toUnsignedLong(payload_length) / 2];
+                dataInputStream.readFully(payload);
+                dataInputStream.readFully(payload);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
