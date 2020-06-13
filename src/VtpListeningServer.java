@@ -39,44 +39,38 @@ public class VtpListeningServer {
     public void readVtpFrame() {
         long source_id = Utility.readLteUnsined32(dataInputStream);
 
- /* uncomment this if statement for CLAS12 vtp test setup 2*/
-        if(Long.toHexString(source_id).equals("c0da0001")) {
+        long total_length = Utility.readLteUnsined32(dataInputStream);
+        long payload_length = Utility.readLteUnsined32(dataInputStream);
+        long compressed_length = Utility.readLteUnsined32(dataInputStream);
+        long magic = Utility.readLteUnsined32(dataInputStream);
 
-            long total_length = Utility.readLteUnsined32(dataInputStream);
-            long payload_length = Utility.readLteUnsined32(dataInputStream);
-            long compressed_length = Utility.readLteUnsined32(dataInputStream);
-            long magic = Utility.readLteUnsined32(dataInputStream);
+        if (magic == 3235520537L) {
+            long format_version = Utility.readLteUnsined32(dataInputStream);
+            long flags = Utility.readLteUnsined32(dataInputStream);
+            BigInteger record_number = Utility.readLteUnsignedSwap64(dataInputStream);
+            BigInteger ts_sec = Utility.readLteUnsignedSwap64(dataInputStream);
+            BigInteger ts_nsec = Utility.readLteUnsignedSwap64(dataInputStream);
+            BigInteger frame_time_ns = record_number.multiply(FRAME_TIME);
 
-            if (magic == 3235520537L) {
-                long format_version = Utility.readLteUnsined32(dataInputStream);
-                long flags = Utility.readLteUnsined32(dataInputStream);
-                BigInteger record_number = Utility.readLteUnsignedSwap64(dataInputStream);
-                BigInteger ts_sec = Utility.readLteUnsignedSwap64(dataInputStream);
-                BigInteger ts_nsec = Utility.readLteUnsignedSwap64(dataInputStream);
-                BigInteger frame_time_ns = record_number.multiply(FRAME_TIME);
+            totalData = totalData + (double) total_length / 1000;
+            rate++;
+/*
+            System.out.println("source_id         = " + Long.toHexString(source_id));
+            System.out.println("total_length      = " + total_length);
+            System.out.println("payload_length    = " + payload_length);
+            System.out.println("compressed_length = " + compressed_length);
+            System.out.println("magic             = " + Long.toHexString(magic));
+            System.out.println("format_version    = " + Long.toHexString(format_version));
+            System.out.println("flags             = " + Long.toHexString(flags));
+            System.out.println("record_number     = " + record_number);
+            System.out.println("ts_sec            = " + ts_sec);
+            System.out.println("ts_nsec           = " + ts_nsec);
+            System.out.println("frame_time_ns     = " + frame_time_ns);
+*/
+            long[] payload = Utility.readLtPayload(dataInputStream, payload_length);
+            //decodePayload(payload, frame_time_ns);
 
-                totalData = totalData + (double) total_length / 1000;
-                rate++;
-
-
-                System.out.println("source_id         = " + Long.toHexString(source_id));
-                System.out.println("total_length      = " + total_length);
-                System.out.println("payload_length    = " + payload_length);
-                System.out.println("compressed_length = " + compressed_length);
-                System.out.println("magic             = " + Long.toHexString(magic));
-                System.out.println("format_version    = " + Long.toHexString(format_version));
-                System.out.println("flags             = " + Long.toHexString(flags));
-                System.out.println("record_number     = " + record_number);
-                System.out.println("ts_sec            = " + ts_sec);
-                System.out.println("ts_nsec           = " + ts_nsec);
-                System.out.println("frame_time_ns     = " + frame_time_ns);
-
-                long[] payload = Utility.readLtPayload(dataInputStream, payload_length);
-                //decodePayload(payload, frame_time_ns);
-
-            }
         }
-
     }
 
     private void decodePayload(long[] payload, BigInteger frame_time_ns) {
