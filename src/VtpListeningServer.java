@@ -56,9 +56,9 @@ public class VtpListeningServer {
 
 
             System.out.println("source_id         = " + Long.toHexString(source_id));
-            System.out.println("total_length      = " + Long.toHexString(total_length));
-            System.out.println("payload_length    = " + Long.toHexString(payload_length));
-            System.out.println("compressed_length = " + Long.toHexString(compressed_length));
+            System.out.println("total_length      = " + total_length);
+            System.out.println("payload_length    = " + payload_length);
+            System.out.println("compressed_length = " + compressed_length);
             System.out.println("magic             = " + Long.toHexString(magic));
             System.out.println("format_version    = " + Long.toHexString(format_version));
             System.out.println("flags             = " + Long.toHexString(flags));
