@@ -79,7 +79,7 @@ public class VtpListeningServer {
             int payload_length = Integer.reverseBytes(dataInputStream.readInt());
             int compressed_length = Integer.reverseBytes(dataInputStream.readInt());
             int magic = Integer.reverseBytes(dataInputStream.readInt());
-
+            System.out.println(Integer.toHexString(magic));
             int format_version = Integer.reverseBytes(dataInputStream.readInt());
             int flags = Integer.reverseBytes(dataInputStream.readInt());
             long record_number = Long.reverseBytes(dataInputStream.readLong());
