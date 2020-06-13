@@ -95,6 +95,7 @@ public class VtpListeningServer {
             for (int i = 0; i < j; i++) {
                 dataInputStream.readInt();
             }
+            System.out.println(Integer.toHexString(magic));
 
         } catch (IOException e) {
             e.printStackTrace();
