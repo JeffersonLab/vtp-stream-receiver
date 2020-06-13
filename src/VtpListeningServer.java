@@ -74,17 +74,17 @@ public class VtpListeningServer {
 
     public void readVtpFrameFast() {
         try {
-            int source_id = dataInputStream.readInt();
-            int total_length = dataInputStream.readInt();
-            int payload_length = dataInputStream.readInt();
-            int compressed_length = dataInputStream.readInt();
-            int magic = dataInputStream.readInt();
+            int source_id = Integer.reverseBytes(dataInputStream.readInt());
+            int total_length = Integer.reverseBytes(dataInputStream.readInt());
+            int payload_length = Integer.reverseBytes(dataInputStream.readInt());
+            int compressed_length = Integer.reverseBytes(dataInputStream.readInt());
+            int magic = Integer.reverseBytes(dataInputStream.readInt());
 
-            int format_version = dataInputStream.readInt();
-            int flags = dataInputStream.readInt();
-            long record_number = dataInputStream.readLong();
-            long ts_sec = dataInputStream.readLong();
-            long ts_nsec = dataInputStream.readLong();
+            int format_version = Integer.reverseBytes(dataInputStream.readInt());
+            int flags = Integer.reverseBytes(dataInputStream.readInt());
+            long record_number = Long.reverseBytes(dataInputStream.readLong());
+            long ts_sec = Long.reverseBytes(dataInputStream.readLong());
+            long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
 
             byte[] payload = new byte[payload_length];
             dataInputStream.readFully(payload);
