@@ -91,11 +91,12 @@ public class VtpListeningServer {
             long ts_sec = Long.reverseBytes(dataInputStream.readLong());
             long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
 
+            long[] payload = Utility.readLtPayload(dataInputStream, payload_length);
 
-            byte[] payload = new byte[(int)Integer.toUnsignedLong(payload_length)/2];
-            dataInputStream.readFully(payload);
-            dataInputStream.readFully(payload);
-
+//            byte[] payload = new byte[(int)Integer.toUnsignedLong(payload_length)/2];
+//            dataInputStream.readFully(payload);
+//            dataInputStream.readFully(payload);
+//
         } catch (IOException e) {
             e.printStackTrace();
         }
