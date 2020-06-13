@@ -31,7 +31,7 @@ public class VtpListeningServer {
             dataInputStream = new DataInputStream(new BufferedInputStream(input));
             long a = Utility.readLteUnsined32(dataInputStream);
             long b = Utility.readLteUnsined32(dataInputStream);
-            System.out.println("==> "+a+" "+b);
+            System.out.println("==> "+Long.toHexString(a)+" "+Long.toHexString(b));
         } catch (IOException e) {
             e.printStackTrace();
         }
