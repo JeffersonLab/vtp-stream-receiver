@@ -29,8 +29,9 @@ public class VtpListeningServer {
             System.out.println("VTP client connected");
             InputStream input = socket.getInputStream();
             dataInputStream = new DataInputStream(new BufferedInputStream(input));
-            Utility.readLteUnsined32(dataInputStream);
-            Utility.readLteUnsined32(dataInputStream);
+            long a = Utility.readLteUnsined32(dataInputStream);
+            long b = Utility.readLteUnsined32(dataInputStream);
+            System.out.println("==> "+a+" "+b);
         } catch (IOException e) {
             e.printStackTrace();
         }
