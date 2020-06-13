@@ -84,18 +84,18 @@ public class VtpListeningServer {
             int payload_length = Integer.reverseBytes(dataInputStream.readInt());
             int compressed_length = Integer.reverseBytes(dataInputStream.readInt());
             int magic = Integer.reverseBytes(dataInputStream.readInt());
-            if(Integer.toHexString(magic).equals("c0da2019")) {
-                int format_version = Integer.reverseBytes(dataInputStream.readInt());
-                int flags = Integer.reverseBytes(dataInputStream.readInt());
-                long record_number = Long.reverseBytes(dataInputStream.readLong());
-                long ts_sec = Long.reverseBytes(dataInputStream.readLong());
-                long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
+            int format_version = Integer.reverseBytes(dataInputStream.readInt());
+            int flags = Integer.reverseBytes(dataInputStream.readInt());
+            long record_number = Long.reverseBytes(dataInputStream.readLong());
+            long ts_sec = Long.reverseBytes(dataInputStream.readLong());
+            long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
 
 
-                byte[] payload = new byte[(int) Integer.toUnsignedLong(payload_length) / 2];
-                dataInputStream.readFully(payload);
-                dataInputStream.readFully(payload);
+            int j = (int) Integer.toUnsignedLong(payload_length) / 4;
+            for (int i = 0; i < j; i++) {
+                dataInputStream.readInt();
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
