@@ -54,7 +54,7 @@ public class VtpListeningServer {
             totalData = totalData + (double) total_length / 1000;
             rate++;
 
-            /*
+
             System.out.println("source_id         = " + Long.toHexString(source_id));
             System.out.println("total_length      = " + Long.toHexString(total_length));
             System.out.println("payload_length    = " + Long.toHexString(payload_length));
@@ -66,10 +66,9 @@ public class VtpListeningServer {
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
             System.out.println("frame_time_ns     = " + frame_time_ns);
-            */
 
             long[] payload = Utility.readLtPayload(dataInputStream, payload_length);
-            decodePayload(payload, frame_time_ns);
+            //decodePayload(payload, frame_time_ns);
 
         }
 
