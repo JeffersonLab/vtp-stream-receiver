@@ -69,8 +69,30 @@ public class VtpListeningServer {
 */
             long[] payload = Utility.readLtPayload(dataInputStream, payload_length);
             //decodePayload(payload, frame_time_ns);
-
         }
+    }
+
+    public void readVtpFrameFast() {
+        try {
+            int source_id = dataInputStream.readInt();
+            int total_length = dataInputStream.readInt();
+            int payload_length = dataInputStream.readInt();
+            int compressed_length = dataInputStream.readInt();
+            int magic = dataInputStream.readInt();
+
+            int format_version = dataInputStream.readInt();
+            int flags = dataInputStream.readInt();
+            long record_number = dataInputStream.readLong();
+            long ts_sec = dataInputStream.readLong();
+            long ts_nsec = dataInputStream.readLong();
+
+            byte[] payload = new byte[payload_length];
+            dataInputStream.readFully(payload);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void decodePayload(long[] payload, BigInteger frame_time_ns) {
@@ -136,7 +158,7 @@ public class VtpListeningServer {
 
     public static void main(String[] args) {
         VtpListeningServer vtp = new VtpListeningServer();
-        while (true) vtp.readVtpFrame();
+        while (true) vtp.readVtpFrameFast();
     }
 }
 
