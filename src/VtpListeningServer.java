@@ -29,8 +29,13 @@ public class VtpListeningServer {
             System.out.println("VTP client connected");
             InputStream input = socket.getInputStream();
             dataInputStream = new DataInputStream(new BufferedInputStream(input));
-            Utility.readLteUnsined32(dataInputStream);
-            Utility.readLteUnsined32(dataInputStream);
+
+            //            Utility.readLteUnsined32(dataInputStream);
+            //            Utility.readLteUnsined32(dataInputStream);
+            dataInputStream.readInt();
+            dataInputStream.readInt();
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -86,7 +91,9 @@ public class VtpListeningServer {
             long ts_sec = Long.reverseBytes(dataInputStream.readLong());
             long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
 
-            byte[] payload = new byte[payload_length];
+
+            byte[] payload = new byte[(int)Integer.toUnsignedLong(payload_length)/2];
+            dataInputStream.readFully(payload);
             dataInputStream.readFully(payload);
 
         } catch (IOException e) {
