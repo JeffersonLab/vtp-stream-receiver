@@ -39,6 +39,7 @@ public class VtpListeningServer {
 
     public void readVtpFrame() {
         long source_id = Utility.readLteUnsined32(dataInputStream);
+        System.out.println("==> "+Long.toHexString(source_id));
         long total_length = Utility.readLteUnsined32(dataInputStream);
         long payload_length = Utility.readLteUnsined32(dataInputStream);
         long compressed_length = Utility.readLteUnsined32(dataInputStream);
