@@ -102,11 +102,10 @@ public class VtpListeningServer {
             System.out.println("ts_nsec           = " + ts_nsec);
 
 
-            int j = (int) Integer.toUnsignedLong(payload_length) / 4;
-            for (int i = 0; i < j; i++) {
-                dataInputStream.readInt();
-            }
-            System.out.println(Integer.toHexString(magic));
+//            int j = (int) Integer.toUnsignedLong(payload_length) / 4;
+//            for (int i = 0; i < j; i++) {
+//                dataInputStream.readInt();
+//            }
 
         } catch (IOException e) {
             e.printStackTrace();
