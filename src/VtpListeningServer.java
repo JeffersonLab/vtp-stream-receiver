@@ -1,3 +1,5 @@
+import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
+
 import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
@@ -101,6 +103,7 @@ public class VtpListeningServer {
             System.out.println("ts_nsec           = " + ts_nsec);
 */
             long[] payload = Utility.readLtPayload(dataInputStream, (total_length) - (12 * 4));
+        System.out.println(payload.length);
     }
 
     public void readSoftVtpFrame_2() {
