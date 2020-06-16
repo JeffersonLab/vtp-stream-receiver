@@ -80,7 +80,6 @@ public class VtpListeningServer {
     public void readSoftVtpFrame() {
         long source_id = Utility.readLteUnsined32(dataInputStream);
         long magic = Utility.readLteUnsined32(dataInputStream);
-        if (magic == 3235520537L) {
             long total_length = Utility.readLteUnsined32(dataInputStream);
             long payload_length = Utility.readLteUnsined32(dataInputStream);
             long compressed_length = Utility.readLteUnsined32(dataInputStream);
@@ -101,7 +100,6 @@ public class VtpListeningServer {
             System.out.println("record_number     = " + record_number);
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
-        }
     }
 
     public void readSoftVtpFrame_2() {
