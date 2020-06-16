@@ -18,6 +18,9 @@ public class VtpListeningServer {
     private int loop = 10;
     private int rate;
 
+    private int VTP_PORT = 6000;
+    private int SOFT_PORT = 5555;
+
     public VtpListeningServer() {
         timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
@@ -25,8 +28,8 @@ public class VtpListeningServer {
         FRAME_TIME = Utility.toUnsignedBigInteger(ft_const);
         ServerSocket serverSocket;
         try {
-            serverSocket = new ServerSocket(6000);
-            System.out.println("Server is listening on port " + 6000);
+            serverSocket = new ServerSocket(SOFT_PORT);
+            System.out.println("Server is listening on port " + SOFT_PORT);
             Socket socket = serverSocket.accept();
             System.out.println("VTP client connected");
             InputStream input = socket.getInputStream();
@@ -79,7 +82,7 @@ public class VtpListeningServer {
         }
     }
 
-    public void readSoftVtpFrame() {
+    public void readSoftFrame() {
             long source_id = Utility.readLteUnsined32(dataInputStream);
             long total_length = Utility.readLteUnsined32(dataInputStream);
             long payload_length = Utility.readLteUnsined32(dataInputStream);
@@ -91,7 +94,7 @@ public class VtpListeningServer {
             BigInteger ts_sec = Utility.readLteUnsignedSwap64(dataInputStream);
             BigInteger ts_nsec = Utility.readLteUnsignedSwap64(dataInputStream);
 
-
+/*
             System.out.println("source_id         = " + Long.toHexString(source_id));
             System.out.println("total_length      = " + total_length);
             System.out.println("payload_length    = " + payload_length);
@@ -101,11 +104,11 @@ public class VtpListeningServer {
             System.out.println("record_number     = " + record_number);
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
-
+*/
             long[] payload = Utility.readLtPayload(dataInputStream, (total_length) - (12 * 4));
     }
 
-    public void readSoftVtpFrame_2() {
+    public void readSoftFrame_2() {
         try {
             int source_id = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
             int magic = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
@@ -202,7 +205,7 @@ public class VtpListeningServer {
 
     public static void main(String[] args) {
         VtpListeningServer vtp = new VtpListeningServer();
-        while (true) vtp.readSoftVtpFrame();
+        while (true) vtp.readSoftFrame();
     }
 }
 
