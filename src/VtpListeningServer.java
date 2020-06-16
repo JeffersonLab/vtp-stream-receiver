@@ -209,7 +209,11 @@ public class VtpListeningServer {
 
     public static void main(String[] args) {
         VtpListeningServer vtp = new VtpListeningServer();
-        while (true) vtp.readSoftFrame();
+        int i = 0;
+        while (true) {
+            vtp.readSoftFrame();
+            System.out.println(i++);
+        }
     }
 }
 
