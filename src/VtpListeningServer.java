@@ -115,30 +115,29 @@ public class VtpListeningServer {
     public void readSoftFrame_2() {
         try {
             int source_id = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
-            int magic = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
             int total_length = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
             int payload_length = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
             int compressed_length = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
+            int magic = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
+
             int format_version = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
             long record_number = Long.reverseBytes(dataInputStream.readLong());
             long ts_sec = Long.reverseBytes(dataInputStream.readLong());
             long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
 
             System.out.println("source_id         = " + Long.toHexString(source_id));
-            System.out.println("magic             = " + Long.toHexString(magic));
             System.out.println("total_length      = " + total_length);
             System.out.println("payload_length    = " + payload_length);
             System.out.println("compressed_length = " + compressed_length);
+            System.out.println("magic             = " + Long.toHexString(magic));
             System.out.println("format_version    = " + Long.toHexString(format_version));
             System.out.println("record_number     = " + record_number);
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
 
 
-            int j = (int) (Integer.toUnsignedLong(total_length) - (12 * 4)) / 4;
-            for (int i = 0; i < j; i++) {
-                Utility.readUnsined32(dataInputStream);
-            }
+            byte[] dataBuffer = new byte[(int)(total_length) - (12 * 4)];
+                dataInputStream.readFully(dataBuffer);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -211,8 +210,8 @@ public class VtpListeningServer {
         VtpListeningServer vtp = new VtpListeningServer();
         int i = 0;
         while (true) {
-            vtp.readSoftFrame();
-            System.out.println(i++);
+            vtp.readSoftFrame_2();
+//            System.out.println(i++);
         }
     }
 }
