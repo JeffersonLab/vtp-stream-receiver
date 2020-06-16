@@ -125,6 +125,7 @@ public class VtpListeningServer {
             long ts_sec = Long.reverseBytes(dataInputStream.readLong());
             long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
 
+/*
             System.out.println("source_id         = " + Integer.toHexString(source_id));
             System.out.println("total_length      = " + total_length);
             System.out.println("payload_length    = " + payload_length);
@@ -134,7 +135,7 @@ public class VtpListeningServer {
             System.out.println("record_number     = " + record_number);
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
-
+*/
 
             byte[] dataBuffer = new byte[total_length - (12 * 4)];
                 dataInputStream.readFully(dataBuffer);
