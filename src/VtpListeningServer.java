@@ -78,7 +78,7 @@ public class VtpListeningServer {
     }
 
     public void readSoftVtpFrame() {
-        long source_id = Utility.readLteUnsined32(dataInputStream);
+            long source_id = Utility.readLteUnsined32(dataInputStream);
             long total_length = Utility.readLteUnsined32(dataInputStream);
             long payload_length = Utility.readLteUnsined32(dataInputStream);
             long compressed_length = Utility.readLteUnsined32(dataInputStream);
@@ -89,19 +89,18 @@ public class VtpListeningServer {
             BigInteger ts_sec = Utility.readLteUnsignedSwap64(dataInputStream);
             BigInteger ts_nsec = Utility.readLteUnsignedSwap64(dataInputStream);
 
-
+/*
             System.out.println("source_id         = " + Long.toHexString(source_id));
-            System.out.println("magic             = " + Long.toHexString(magic));
             System.out.println("total_length      = " + total_length);
             System.out.println("payload_length    = " + payload_length);
             System.out.println("compressed_length = " + compressed_length);
+            System.out.println("magic             = " + Long.toHexString(magic));
             System.out.println("format_version    = " + Long.toHexString(format_version));
             System.out.println("record_number     = " + record_number);
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
-
-        long[] payload = Utility.readLtPayload(dataInputStream, (total_length) - (12 * 4));
-
+*/
+            long[] payload = Utility.readLtPayload(dataInputStream, (total_length) - (12 * 4));
     }
 
     public void readSoftVtpFrame_2() {
