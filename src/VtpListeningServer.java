@@ -140,6 +140,10 @@ public class VtpListeningServer {
             byte[] dataBuffer = new byte[total_length - (12 * 4)];
                 dataInputStream.readFully(dataBuffer);
 
+            totalData = totalData + (double) total_length / 1000.0;
+            rate++;
+
+
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
@@ -210,11 +214,7 @@ public class VtpListeningServer {
 
     public static void main(String[] args) {
         VtpListeningServer vtp = new VtpListeningServer();
-        int i = 0;
-        while (true) {
-            vtp.readSoftFrame_2();
-//            System.out.println(i++);
-        }
+        while (true) vtp.readSoftFrame_2();
     }
 }
 
