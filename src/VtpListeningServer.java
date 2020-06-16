@@ -114,13 +114,13 @@ public class VtpListeningServer {
 
     public void readSoftFrame_2() {
         try {
-            int source_id = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
-            int total_length = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
-            int payload_length = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
-            int compressed_length = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
-            int magic = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
+            int source_id = Integer.reverseBytes(dataInputStream.readInt());
+            int total_length = Integer.reverseBytes(dataInputStream.readInt());
+            int payload_length = Integer.reverseBytes(dataInputStream.readInt());
+            int compressed_length = Integer.reverseBytes(dataInputStream.readInt());
+            int magic = Integer.reverseBytes(dataInputStream.readInt());
 
-            int format_version = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
+            int format_version = Integer.reverseBytes(dataInputStream.readInt());
             long record_number = Long.reverseBytes(dataInputStream.readLong());
             long ts_sec = Long.reverseBytes(dataInputStream.readLong());
             long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
