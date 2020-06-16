@@ -79,10 +79,10 @@ public class VtpListeningServer {
 
     public void readSoftVtpFrame() {
         long source_id = Utility.readLteUnsined32(dataInputStream);
-        long magic = Utility.readLteUnsined32(dataInputStream);
             long total_length = Utility.readLteUnsined32(dataInputStream);
             long payload_length = Utility.readLteUnsined32(dataInputStream);
             long compressed_length = Utility.readLteUnsined32(dataInputStream);
+            long magic = Utility.readLteUnsined32(dataInputStream);
 
             long format_version = Utility.readLteUnsined32(dataInputStream);
             BigInteger record_number = Utility.readLteUnsignedSwap64(dataInputStream);
