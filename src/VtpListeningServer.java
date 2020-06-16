@@ -59,7 +59,7 @@ public class VtpListeningServer {
 
             totalData = totalData + (double) total_length / 1000;
             rate++;
-
+/*
             System.out.println("source_id         = " + Long.toHexString(source_id));
             System.out.println("total_length      = " + total_length);
             System.out.println("payload_length    = " + payload_length);
@@ -71,21 +71,20 @@ public class VtpListeningServer {
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
             System.out.println("frame_time_ns     = " + frame_time_ns);
-
+*/
             long[] payload = Utility.readLtPayload(dataInputStream, payload_length);
-            //decodePayload(payload, frame_time_ns);
+            decodePayload(payload, frame_time_ns);
         }
     }
 
-    public void readVtpFrameFast() {
+    public void readSoftVtpFrame() {
         try {
             int source_id = Integer.reverseBytes(dataInputStream.readInt());
+            int magic = Integer.reverseBytes(dataInputStream.readInt());
             int total_length = Integer.reverseBytes(dataInputStream.readInt());
             int payload_length = Integer.reverseBytes(dataInputStream.readInt());
             int compressed_length = Integer.reverseBytes(dataInputStream.readInt());
-            int magic = Integer.reverseBytes(dataInputStream.readInt());
             int format_version = Integer.reverseBytes(dataInputStream.readInt());
-            int flags = Integer.reverseBytes(dataInputStream.readInt());
             long record_number = Long.reverseBytes(dataInputStream.readLong());
             long ts_sec = Long.reverseBytes(dataInputStream.readLong());
             long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
@@ -96,16 +95,15 @@ public class VtpListeningServer {
             System.out.println("compressed_length = " + compressed_length);
             System.out.println("magic             = " + Long.toHexString(magic));
             System.out.println("format_version    = " + Long.toHexString(format_version));
-            System.out.println("flags             = " + Long.toHexString(flags));
             System.out.println("record_number     = " + record_number);
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
 
 
-//            int j = (int) Integer.toUnsignedLong(payload_length) / 4;
-//            for (int i = 0; i < j; i++) {
-//                dataInputStream.readInt();
-//            }
+            int j = (int) Integer.toUnsignedLong(total_length - (12 * 4)) / 4;
+            for (int i = 0; i < j; i++) {
+                dataInputStream.readInt();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -176,7 +174,7 @@ public class VtpListeningServer {
 
     public static void main(String[] args) {
         VtpListeningServer vtp = new VtpListeningServer();
-        while (true) vtp.readVtpFrame();
+        while (true) vtp.readSoftVtpFrame();
     }
 }
 
