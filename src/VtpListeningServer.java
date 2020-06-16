@@ -89,7 +89,6 @@ public class VtpListeningServer {
             BigInteger ts_sec = Utility.readLteUnsignedSwap64(dataInputStream);
             BigInteger ts_nsec = Utility.readLteUnsignedSwap64(dataInputStream);
 
-            long[] payload = Utility.readLtPayload(dataInputStream, (total_length) - (12 * 4));
 
             System.out.println("source_id         = " + Long.toHexString(source_id));
             System.out.println("magic             = " + Long.toHexString(magic));
@@ -100,6 +99,9 @@ public class VtpListeningServer {
             System.out.println("record_number     = " + record_number);
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
+
+        long[] payload = Utility.readLtPayload(dataInputStream, (total_length) - (12 * 4));
+
     }
 
     public void readSoftVtpFrame_2() {
