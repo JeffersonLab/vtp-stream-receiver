@@ -103,7 +103,9 @@ public class VtpListeningServer {
             System.out.println("ts_nsec           = " + ts_nsec);
 */
             long[] payload = Utility.readLtPayload(dataInputStream, (total_length) - (12 * 4));
+        System.out.println("magic             = " + Long.toHexString(magic));
         System.out.println(payload.length);
+        System.out.println();
     }
 
     public void readSoftVtpFrame_2() {
