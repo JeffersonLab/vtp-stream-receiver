@@ -71,6 +71,15 @@ public class Utility {
         return getUnsignedInt(bb);
     }
 
+    public static int readUnsined32(DataInputStream dataInputStream) throws IOException {
+        int ch1 = dataInputStream.read();
+        int ch2 = dataInputStream.read();
+        int ch3 = dataInputStream.read();
+        int ch4 = dataInputStream.read();
+        return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
+    }
+
+
     public static BigInteger toUnsignedBigInteger(long i) {
         if (i >= 0L)
             return BigInteger.valueOf(i);

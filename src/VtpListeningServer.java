@@ -79,12 +79,12 @@ public class VtpListeningServer {
 
     public void readSoftVtpFrame() {
         try {
-            int source_id = Integer.reverseBytes(dataInputStream.readInt());
-            int magic = Integer.reverseBytes(dataInputStream.readInt());
-            int total_length = Integer.reverseBytes(dataInputStream.readInt());
-            int payload_length = Integer.reverseBytes(dataInputStream.readInt());
-            int compressed_length = Integer.reverseBytes(dataInputStream.readInt());
-            int format_version = Integer.reverseBytes(dataInputStream.readInt());
+            int source_id = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
+            int magic = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
+            int total_length = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
+            int payload_length = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
+            int compressed_length = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
+            int format_version = Integer.reverseBytes(Utility.readUnsined32(dataInputStream));
             long record_number = Long.reverseBytes(dataInputStream.readLong());
             long ts_sec = Long.reverseBytes(dataInputStream.readLong());
             long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
@@ -100,9 +100,9 @@ public class VtpListeningServer {
             System.out.println("ts_nsec           = " + ts_nsec);
 
 
-            int j = (int) Integer.toUnsignedLong(total_length - (12 * 4)) / 4;
+            int j = (int) (Integer.toUnsignedLong(total_length) - (12 * 4)) / 4;
             for (int i = 0; i < j; i++) {
-                dataInputStream.readInt();
+                Utility.readUnsined32(dataInputStream);
             }
 
         } catch (IOException e) {
