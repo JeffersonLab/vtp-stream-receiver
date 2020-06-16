@@ -130,7 +130,7 @@ public class Utility {
         return payload;
     }
 
-    private static long llSwap(long l) {
+    public static long llSwap(long l) {
         long x = l >> 32;
         x = x | l << 32;
         return x;
