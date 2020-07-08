@@ -82,16 +82,16 @@ public class VtpListeningServer {
     }
 
     public void readSoftFrame() {
-            long source_id = Utility.readLteUnsined32(dataInputStream);
-            long total_length = Utility.readLteUnsined32(dataInputStream);
-            long payload_length = Utility.readLteUnsined32(dataInputStream);
-            long compressed_length = Utility.readLteUnsined32(dataInputStream);
-            long magic = Utility.readLteUnsined32(dataInputStream);
+        long source_id = Utility.readLteUnsined32(dataInputStream);
+        long total_length = Utility.readLteUnsined32(dataInputStream);
+        long payload_length = Utility.readLteUnsined32(dataInputStream);
+        long compressed_length = Utility.readLteUnsined32(dataInputStream);
+        long magic = Utility.readLteUnsined32(dataInputStream);
 
-            long format_version = Utility.readLteUnsined32(dataInputStream);
-            BigInteger record_number = Utility.readLteUnsignedSwap64(dataInputStream);
-            BigInteger ts_sec = Utility.readLteUnsignedSwap64(dataInputStream);
-            BigInteger ts_nsec = Utility.readLteUnsignedSwap64(dataInputStream);
+        long format_version = Utility.readLteUnsined32(dataInputStream);
+        BigInteger record_number = Utility.readLteUnsignedSwap64(dataInputStream);
+        BigInteger ts_sec = Utility.readLteUnsignedSwap64(dataInputStream);
+        BigInteger ts_nsec = Utility.readLteUnsignedSwap64(dataInputStream);
 /*
             System.out.println("source_id         = " + Long.toHexString(source_id));
             System.out.println("total_length      = " + total_length);
@@ -103,7 +103,7 @@ public class VtpListeningServer {
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
 */
-            byte[] dataBuffer = new byte[(int)(total_length) - (12 * 4)];
+        byte[] dataBuffer = new byte[(int) (total_length) - (12 * 4)];
         try {
             dataInputStream.readFully(dataBuffer);
         } catch (IOException e) {
@@ -137,7 +137,7 @@ public class VtpListeningServer {
 */
 
             byte[] dataBuffer = new byte[total_length - (12 * 4)];
-                dataInputStream.readFully(dataBuffer);
+            dataInputStream.readFully(dataBuffer);
 
             totalData = totalData + (double) total_length / 1000.0;
             rate++;
@@ -148,25 +148,28 @@ public class VtpListeningServer {
         }
 
     }
+
     public void readVtpFrame_2() {
         try {
-        int source_id = Integer.reverseBytes(dataInputStream.readInt());
-        int total_length = Integer.reverseBytes(dataInputStream.readInt());
-        int payload_length = Integer.reverseBytes(dataInputStream.readInt());
-        int compressed_length = Integer.reverseBytes(dataInputStream.readInt());
-        int magic = Integer.reverseBytes(dataInputStream.readInt());
+            int source_id = Integer.reverseBytes(dataInputStream.readInt());
+            int total_length = Integer.reverseBytes(dataInputStream.readInt());
+            int payload_length = Integer.reverseBytes(dataInputStream.readInt());
+            int compressed_length = Integer.reverseBytes(dataInputStream.readInt());
+            int magic = Integer.reverseBytes(dataInputStream.readInt());
 
-        int format_version = Integer.reverseBytes(dataInputStream.readInt());
-        int flags = Integer.reverseBytes(dataInputStream.readInt());
-        long record_number = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
-        long ts_sec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
-        long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
+            // check for magic word = C0DA2019 (below signed int representation
+            if (magic == -1059446759) {
+                int format_version = Integer.reverseBytes(dataInputStream.readInt());
+                int flags = Integer.reverseBytes(dataInputStream.readInt());
+                long record_number = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
+                long ts_sec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
+                long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
 
-        byte[] dataBuffer = new byte[total_length - (13 * 4)];
-        dataInputStream.readFully(dataBuffer);
+                byte[] dataBuffer = new byte[total_length - (13 * 4)];
+                dataInputStream.readFully(dataBuffer);
 
-        totalData = totalData + (double) total_length / 1000.0;
-        rate++;
+                totalData = totalData + (double) total_length / 1000.0;
+                rate++;
 /*
             System.out.println("source_id         = " + Long.toHexString(source_id));
             System.out.println("total_length      = " + total_length);
@@ -180,6 +183,7 @@ public class VtpListeningServer {
             System.out.println("ts_nsec           = " + ts_nsec);
             System.out.println("frame_time_ns     = " + frame_time_ns);
 */
+            }
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
