@@ -1,4 +1,3 @@
-import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -28,8 +27,8 @@ public class VtpListeningServer {
         FRAME_TIME = Utility.toUnsignedBigInteger(ft_const);
         ServerSocket serverSocket;
         try {
-            serverSocket = new ServerSocket(SOFT_PORT);
-            System.out.println("Server is listening on port " + SOFT_PORT);
+            serverSocket = new ServerSocket(VTP_PORT);
+            System.out.println("Server is listening on port " + VTP_PORT);
             Socket socket = serverSocket.accept();
             System.out.println("VTP client connected");
             InputStream input = socket.getInputStream();
@@ -143,12 +142,48 @@ public class VtpListeningServer {
             totalData = totalData + (double) total_length / 1000.0;
             rate++;
 
-
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
 
+    }
+    public void readVtpFrame_2() {
+        try {
+        int source_id = Integer.reverseBytes(dataInputStream.readInt());
+        int total_length = Integer.reverseBytes(dataInputStream.readInt());
+        int payload_length = Integer.reverseBytes(dataInputStream.readInt());
+        int compressed_length = Integer.reverseBytes(dataInputStream.readInt());
+        int magic = Integer.reverseBytes(dataInputStream.readInt());
+
+        int format_version = Integer.reverseBytes(dataInputStream.readInt());
+        int flags = Integer.reverseBytes(dataInputStream.readInt());
+        long record_number = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
+        long ts_sec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
+        long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
+
+        byte[] dataBuffer = new byte[total_length - (13 * 4)];
+        dataInputStream.readFully(dataBuffer);
+
+        totalData = totalData + (double) total_length / 1000.0;
+        rate++;
+/*
+            System.out.println("source_id         = " + Long.toHexString(source_id));
+            System.out.println("total_length      = " + total_length);
+            System.out.println("payload_length    = " + payload_length);
+            System.out.println("compressed_length = " + compressed_length);
+            System.out.println("magic             = " + Long.toHexString(magic));
+            System.out.println("format_version    = " + Long.toHexString(format_version));
+            System.out.println("flags             = " + Long.toHexString(flags));
+            System.out.println("record_number     = " + record_number);
+            System.out.println("ts_sec            = " + ts_sec);
+            System.out.println("ts_nsec           = " + ts_nsec);
+            System.out.println("frame_time_ns     = " + frame_time_ns);
+*/
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
 
     private void decodePayload(long[] payload, BigInteger frame_time_ns) {
@@ -214,7 +249,7 @@ public class VtpListeningServer {
 
     public static void main(String[] args) {
         VtpListeningServer vtp = new VtpListeningServer();
-        while (true) vtp.readSoftFrame_2();
+        while (true) vtp.readVtpFrame_2();
     }
 }
 
