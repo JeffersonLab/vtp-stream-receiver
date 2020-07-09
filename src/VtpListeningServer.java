@@ -20,6 +20,9 @@ public class VtpListeningServer {
     private int VTP_PORT = 6000;
     private int SOFT_PORT = 5555;
 
+    private long prev_rec_number;
+    private int missed_record;
+
     public VtpListeningServer() {
         timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
@@ -166,6 +169,11 @@ public class VtpListeningServer {
                 long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
                 long frame_time_ns = record_number*ft_const;
 
+                if(record_number >1) {
+                    if (record_number != (prev_rec_number + 1)) missed_record++;
+                }
+                prev_rec_number = record_number;
+
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
@@ -243,7 +251,8 @@ public class VtpListeningServer {
         public void run() {
             if (loop <= 0) {
                 System.out.println("event rate =" + rate
-                        + " Hz.  data rate =" + totalData + " kB/s");
+                        + " Hz.  data rate =" + totalData + " kB/s" +
+                        " missed "+ missed_record);
                 loop = 10;
                 rate = 0;
             }
