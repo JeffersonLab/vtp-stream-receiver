@@ -169,7 +169,7 @@ public class VtpListeningServer {
                 long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
                 long frame_time_ns = record_number*ft_const;
 
-                if(record_number >1) {
+                if(record_number >3000) {
                     if (record_number != (prev_rec_number + 1)) missed_record++;
                 }
                 prev_rec_number = record_number;
