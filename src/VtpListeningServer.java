@@ -164,8 +164,9 @@ public class VtpListeningServer {
                 long record_number = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
                 long ts_sec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
                 long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
+                long frame_time_ns = record_number*ft_const;
 
-                byte[] dataBuffer = new byte[total_length - (13 * 4)];
+                byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
                 totalData = totalData + (double) total_length / 1000.0;
@@ -241,7 +242,7 @@ public class VtpListeningServer {
         @Override
         public void run() {
             if (loop <= 0) {
-                System.out.println("event ratre =" + rate
+                System.out.println("event rate =" + rate
                         + " Hz.  data rate =" + totalData + " kB/s");
                 loop = 10;
                 rate = 0;
