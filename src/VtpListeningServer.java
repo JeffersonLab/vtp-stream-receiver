@@ -22,6 +22,7 @@ public class VtpListeningServer {
 
     private long prev_rec_number;
     private int missed_record;
+    private boolean check = true;
 
     public VtpListeningServer() {
         timer = new Timer();
@@ -248,7 +249,10 @@ public class VtpListeningServer {
         @Override
         public void run() {
             if (loop <= 0) {
-                if ( missed_record < 2000) missed_record = 0;
+                if ( check && missed_record < 2000) {
+                    missed_record = 0;
+                    check = false;
+                }
                 System.out.println("event rate =" + rate
                         + " Hz.  data rate =" + totalData + " kB/s" +
                         " missed "+ missed_record);
