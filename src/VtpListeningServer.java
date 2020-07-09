@@ -249,7 +249,7 @@ public class VtpListeningServer {
         public void run() {
             if (loop <= 0) {
                 System.out.println("event rate =" + rate
-                        + " Hz.  data rate =" + totalData + " kB/s" +
+                        + " Hz.  data rate =" + totalData + " kB/s." +
                         " missed rate = "+ missed_record +" Hz." );
                 loop = 10;
                 rate = 0;
