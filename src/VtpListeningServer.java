@@ -248,6 +248,7 @@ public class VtpListeningServer {
         @Override
         public void run() {
             if (loop <= 0) {
+                if ( missed_record < 2000) missed_record = 0;
                 System.out.println("event rate =" + rate
                         + " Hz.  data rate =" + totalData + " kB/s" +
                         " missed "+ missed_record);
