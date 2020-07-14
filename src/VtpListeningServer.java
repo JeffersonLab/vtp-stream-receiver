@@ -213,7 +213,7 @@ public class VtpListeningServer {
             int slot_len = Utility.getUnsignedShort(bb);
             if (slot_ind > 0 && slot_len > 0) {
                 for (int i = slot_ind * 4; i < slot_len / 4; i++) {
-                    System.out.println("slot_ind= " + slot_ind + " slot_len= " + slot_len + " " + payload.length + " limit= " + bb.limit());
+//                    System.out.println("slot_ind= " + slot_ind + " slot_len= " + slot_len + " " + payload.length + " limit= " + bb.limit());
                     long payload_data_point = Utility.getUnsignedInt(bb);
                 }
             }
