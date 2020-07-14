@@ -3,14 +3,15 @@ import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.jar.JarOutputStream;
 
 public class VtpListeningServer {
 
+    private int exception_count;
     private DataInputStream dataInputStream;
     private static BigInteger FRAME_TIME;
     private static final long ft_const = 65536L;
@@ -212,9 +213,13 @@ public class VtpListeningServer {
             int slot_ind = Utility.getUnsignedShort(bb);
             int slot_len = Utility.getUnsignedShort(bb);
             if (slot_ind > 0 && slot_len > 0) {
-                for (int i = (slot_ind+1) * 4; i < slot_len / 4; i++) {
+                for (int i = slot_ind * 4; i < slot_len / 4; i++) {
 //                    System.out.println("slot_ind= " + slot_ind + " slot_len= " + slot_len + " " + payload.length + " limit= " + bb.limit());
-                    long payload_data_point = Utility.getUnsignedInt(bb);
+                    try {
+                        long payload_data_point = Utility.getUnsignedInt(bb);
+                    } catch(BufferUnderflowException e){
+                        System.out.println(exception_count++);
+                    }
                 }
             }
         }
