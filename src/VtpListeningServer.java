@@ -218,7 +218,7 @@ public class VtpListeningServer {
                 }
             }
         }
-        System.out.println();
+//        System.out.println();
     }
 
     private void decodePayload(long[] payload, BigInteger frame_time_ns) {
