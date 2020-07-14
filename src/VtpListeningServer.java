@@ -141,7 +141,7 @@ public class VtpListeningServer {
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
 */
-           System.out.println("record_number     = " + record_number);  
+            System.out.println("record_number     = " + record_number);
             if (record_number != (prev_rec_number + 1)) missed_record++;
             prev_rec_number = record_number;
 
@@ -211,10 +211,11 @@ public class VtpListeningServer {
         for (int jj = 0; jj < 8; jj++) {
             int slot_ind = Utility.getUnsignedShort(bb);
             int slot_len = Utility.getUnsignedShort(bb);
-            System.out.println(slot_ind+" "+slot_len);
-//            for (int i = slot_ind; i < slot_len; i++) {
-//                long payload_data_point = Utility.getUnsignedInt(bb);
-//            }
+            if (slot_len > 0) {
+                for (int i = slot_ind; i < slot_len; i++) {
+                    long payload_data_point = Utility.getUnsignedInt(bb);
+                }
+            }
         }
     }
 
@@ -227,7 +228,7 @@ public class VtpListeningServer {
             System.out.printf("slot_ind=%d, slot_len=%d\n", slot_ind, slot_len);
 
 //            decodeSlotData(payload, (int) slot_ind, slot_len, frame_time_ns);
-            
+
             System.out.println();
 
 
@@ -283,7 +284,7 @@ public class VtpListeningServer {
 
     public static void main(String[] args) {
         VtpListeningServer vtp = new VtpListeningServer();
-        while (true) vtp.readVtpFrame();
+        while (true) vtp.readVtpFrame_2();
 //        while (true) vtp.readSoftFrame_2();
     }
 }
