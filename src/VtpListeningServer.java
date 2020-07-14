@@ -1,8 +1,12 @@
 
+import jdk.jshell.execution.Util;
+
 import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -167,13 +171,15 @@ public class VtpListeningServer {
                 long record_number = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
                 long ts_sec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
                 long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
-                long frame_time_ns = record_number*ft_const;
+                long frame_time_ns = record_number * ft_const;
 
-                    if (record_number != (prev_rec_number + 1)) missed_record++;
+                if (record_number != (prev_rec_number + 1)) missed_record++;
                 prev_rec_number = record_number;
 
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
+
+                decodePayload_2(dataBuffer);
 
                 totalData = totalData + (double) total_length / 1000.0;
                 rate++;
@@ -194,6 +200,18 @@ public class VtpListeningServer {
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
+        }
+    }
+
+    private void decodePayload_2(byte[] payload) {
+        ByteBuffer bb = ByteBuffer.wrap(payload);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        for (int jj = 0; jj < 8; jj++) {
+            int slot_ind = Utility.getUnsignedShort(bb);
+            int slot_len = Utility.getUnsignedShort(bb);
+            for (int i = slot_ind; i < slot_len; i++) {
+                long payload_data_point = Utility.getUnsignedInt(bb);
+            }
         }
     }
 
@@ -250,7 +268,7 @@ public class VtpListeningServer {
             if (loop <= 0) {
                 System.out.println("event rate =" + rate
                         + " Hz.  data rate =" + totalData + " kB/s." +
-                        " missed rate = "+ missed_record +" Hz." );
+                        " missed rate = " + missed_record + " Hz.");
                 loop = 10;
                 rate = 0;
                 missed_record = 0;
