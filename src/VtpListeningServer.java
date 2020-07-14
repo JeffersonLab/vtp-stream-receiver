@@ -140,7 +140,7 @@ public class VtpListeningServer {
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
 */
-
+           System.out.println("record_number     = " + record_number);  
             if (record_number != (prev_rec_number + 1)) missed_record++;
             prev_rec_number = record_number;
 
