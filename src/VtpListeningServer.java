@@ -143,6 +143,9 @@ public class VtpListeningServer {
             System.out.println("ts_nsec           = " + ts_nsec);
 */
 
+            if (record_number != (prev_rec_number + 1)) missed_record++;
+            prev_rec_number = record_number;
+
             byte[] dataBuffer = new byte[total_length - (12 * 4)];
             dataInputStream.readFully(dataBuffer);
 
