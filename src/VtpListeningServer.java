@@ -223,14 +223,14 @@ public class VtpListeningServer {
             long val = payload[jj];
             long slot_ind = (val >> 0) & 0xFFFF; /*extract index for this FADC data*/
             long slot_len = (val >> 16) & 0xFFFF; /*extract length for this FADC data*/
-            /*
+
             System.out.printf("slot_ind=%d, slot_len=%d\n", slot_ind, slot_len);
-             */
-            decodeSlotData(payload, (int) slot_ind, slot_len, frame_time_ns);
-            /*
+
+//            decodeSlotData(payload, (int) slot_ind, slot_len, frame_time_ns);
+            
             System.out.println();
 
-             */
+
         }
     }
 
@@ -283,7 +283,7 @@ public class VtpListeningServer {
 
     public static void main(String[] args) {
         VtpListeningServer vtp = new VtpListeningServer();
-        while (true) vtp.readVtpFrame_2();
+        while (true) vtp.readVtpFrame();
 //        while (true) vtp.readSoftFrame_2();
     }
 }
