@@ -209,21 +209,22 @@ public class VtpListeningServer {
     private void decodePayload_2(byte[] payload) {
         ByteBuffer bb = ByteBuffer.wrap(payload);
         bb.order(ByteOrder.LITTLE_ENDIAN);
+        int[] slot_ind = new int[8];
+        int[] slot_len = new int[8];
         for (int jj = 0; jj < 8; jj++) {
-            int slot_ind = Utility.getUnsignedShort(bb);
-            int slot_len = Utility.getUnsignedShort(bb);
-            if (slot_ind > 0 && slot_len > 0) {
-                for (int i = slot_ind * 4; i < slot_len / 4; i++) {
-//                    System.out.println("slot_ind= " + slot_ind + " slot_len= " + slot_len + " " + payload.length + " limit= " + bb.limit());
-                    try {
-                        long payload_data_point = Utility.getUnsignedInt(bb);
-                    } catch(BufferUnderflowException e){
-                        System.out.println(exception_count++);
-                    }
-                }
-            }
+            slot_ind[jj] = Utility.getUnsignedShort(bb);
+            slot_len[jj] = Utility.getUnsignedShort(bb);
         }
-//        System.out.println();
+        bb.rewind();
+        for(int i = 0; i<8; i++) {
+             if (slot_ind[i] > 0 && slot_len[i] > 0) {
+                 for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
+                     long payload_data_point = Utility.getUnsignedInt(bb);
+                 }
+             }
+        }
+// System.out.println("slot_ind= " + slot_ind + " slot_len= " + slot_len + " " + payload.length + " limit= " + bb.limit());
+// System.out.println();
     }
 
     private void decodePayload(long[] payload, BigInteger frame_time_ns) {
