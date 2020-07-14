@@ -212,13 +212,13 @@ public class VtpListeningServer {
             int slot_ind = Utility.getUnsignedShort(bb);
             int slot_len = Utility.getUnsignedShort(bb);
             if (slot_ind > 0 && slot_len >0) {
-            System.out.println("slot_ind= "+slot_ind+" slot_len= "+slot_len+" "+payload.length);
-//                for (int i = slot_ind; i < slot_len; i=i+4) {
-//                    long payload_data_point = Utility.getUnsignedInt(bb);
-//                }
+//            System.out.println("slot_ind= "+slot_ind+" slot_len= "+slot_len+" "+payload.length);
+                for (int i = slot_ind*4; i < slot_len*4; i=i+4) {
+                    long payload_data_point = Utility.getUnsignedInt(bb);
+                }
             }
         }
-        System.out.println();
+//        System.out.println();
     }
 
     private void decodePayload(long[] payload, BigInteger frame_time_ns) {
