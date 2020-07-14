@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.jar.JarOutputStream;
 
 public class VtpListeningServer {
 
@@ -210,9 +211,10 @@ public class VtpListeningServer {
         for (int jj = 0; jj < 8; jj++) {
             int slot_ind = Utility.getUnsignedShort(bb);
             int slot_len = Utility.getUnsignedShort(bb);
-            for (int i = slot_ind; i < slot_len; i++) {
-                long payload_data_point = Utility.getUnsignedInt(bb);
-            }
+            System.out.println(slot_ind+" "+slot_len);
+//            for (int i = slot_ind; i < slot_len; i++) {
+//                long payload_data_point = Utility.getUnsignedInt(bb);
+//            }
         }
     }
 
