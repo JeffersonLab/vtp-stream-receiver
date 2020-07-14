@@ -281,7 +281,8 @@ public class VtpListeningServer {
 
     public static void main(String[] args) {
         VtpListeningServer vtp = new VtpListeningServer();
-        while (true) vtp.readVtpFrame_2();
+//        while (true) vtp.readVtpFrame_2();
+        while (true) vtp.readSoftFrame_2();
     }
 }
 
