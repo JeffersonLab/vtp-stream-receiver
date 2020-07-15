@@ -1,3 +1,5 @@
+import org.jlab.epsci.ersap.util.Utility;
+
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;

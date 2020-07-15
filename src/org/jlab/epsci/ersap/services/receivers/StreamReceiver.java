@@ -1,3 +1,4 @@
+package org.jlab.epsci.ersap.services.receivers;
 
 import org.jlab.epsci.ersap.util.Utility;
 
@@ -10,116 +11,42 @@ import java.nio.ByteOrder;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class VtpListeningServer {
+public class StreamReceiver {
 
-    private int exception_count;
     private DataInputStream dataInputStream;
     private static BigInteger FRAME_TIME;
     private static final long ft_const = 65536L;
 
     private volatile double totalData;
-    private Timer timer;
     private int loop = 10;
     private int rate;
 
-    private int VTP_PORT = 6000;
-    private int SOFT_PORT = 5555;
-
+    private static int streamSourcePort = 6000;
+    private static boolean isSoftwareStream = false;
     private long prev_rec_number;
     private int missed_record;
 
-    public VtpListeningServer() {
-        timer = new Timer();
+    public StreamReceiver() {
+        Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
 
         FRAME_TIME = Utility.toUnsignedBigInteger(ft_const);
         ServerSocket serverSocket;
         try {
-            serverSocket = new ServerSocket(VTP_PORT);
-            System.out.println("Server is listening on port " + VTP_PORT);
+            serverSocket = new ServerSocket(streamSourcePort);
+            System.out.println("Server is listening on port " + streamSourcePort);
             Socket socket = serverSocket.accept();
             System.out.println("VTP client connected");
             InputStream input = socket.getInputStream();
             dataInputStream = new DataInputStream(new BufferedInputStream(input));
-
-            //            org.jlab.epsci.ersap.util.Utility.readLteUnsined32(dataInputStream);
-            //            org.jlab.epsci.ersap.util.Utility.readLteUnsined32(dataInputStream);
             dataInputStream.readInt();
             dataInputStream.readInt();
-
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void readVtpFrame() {
-        long source_id = Utility.readLteUnsined32(dataInputStream);
-
-        long total_length = Utility.readLteUnsined32(dataInputStream);
-        long payload_length = Utility.readLteUnsined32(dataInputStream);
-        long compressed_length = Utility.readLteUnsined32(dataInputStream);
-        long magic = Utility.readLteUnsined32(dataInputStream);
-
-        if (magic == 3235520537L) {
-            long format_version = Utility.readLteUnsined32(dataInputStream);
-            long flags = Utility.readLteUnsined32(dataInputStream);
-            BigInteger record_number = Utility.readLteUnsignedSwap64(dataInputStream);
-            BigInteger ts_sec = Utility.readLteUnsignedSwap64(dataInputStream);
-            BigInteger ts_nsec = Utility.readLteUnsignedSwap64(dataInputStream);
-            BigInteger frame_time_ns = record_number.multiply(FRAME_TIME);
-
-            totalData = totalData + (double) total_length / 1000;
-            rate++;
-/*
-            System.out.println("source_id         = " + Long.toHexString(source_id));
-            System.out.println("total_length      = " + total_length);
-            System.out.println("payload_length    = " + payload_length);
-            System.out.println("compressed_length = " + compressed_length);
-            System.out.println("magic             = " + Long.toHexString(magic));
-            System.out.println("format_version    = " + Long.toHexString(format_version));
-            System.out.println("flags             = " + Long.toHexString(flags));
-            System.out.println("record_number     = " + record_number);
-            System.out.println("ts_sec            = " + ts_sec);
-            System.out.println("ts_nsec           = " + ts_nsec);
-            System.out.println("frame_time_ns     = " + frame_time_ns);
-*/
-            long[] payload = Utility.readLtPayload(dataInputStream, payload_length);
-            decodePayload(payload, frame_time_ns);
-        }
-    }
-
-    public void readSoftFrame() {
-        long source_id = Utility.readLteUnsined32(dataInputStream);
-        long total_length = Utility.readLteUnsined32(dataInputStream);
-        long payload_length = Utility.readLteUnsined32(dataInputStream);
-        long compressed_length = Utility.readLteUnsined32(dataInputStream);
-        long magic = Utility.readLteUnsined32(dataInputStream);
-
-        long format_version = Utility.readLteUnsined32(dataInputStream);
-        BigInteger record_number = Utility.readLteUnsignedSwap64(dataInputStream);
-        BigInteger ts_sec = Utility.readLteUnsignedSwap64(dataInputStream);
-        BigInteger ts_nsec = Utility.readLteUnsignedSwap64(dataInputStream);
-/*
-            System.out.println("source_id         = " + Long.toHexString(source_id));
-            System.out.println("total_length      = " + total_length);
-            System.out.println("payload_length    = " + payload_length);
-            System.out.println("compressed_length = " + compressed_length);
-            System.out.println("magic             = " + Long.toHexString(magic));
-            System.out.println("format_version    = " + Long.toHexString(format_version));
-            System.out.println("record_number     = " + record_number);
-            System.out.println("ts_sec            = " + ts_sec);
-            System.out.println("ts_nsec           = " + ts_nsec);
-*/
-        byte[] dataBuffer = new byte[(int) (total_length) - (12 * 4)];
-        try {
-            dataInputStream.readFully(dataBuffer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void readSoftFrame_2() {
+    private void readSoftStream() {
         try {
             int source_id = Integer.reverseBytes(dataInputStream.readInt());
             int total_length = Integer.reverseBytes(dataInputStream.readInt());
@@ -157,10 +84,9 @@ public class VtpListeningServer {
             e.printStackTrace();
             System.exit(1);
         }
-
     }
 
-    public void readVtpFrame_2() {
+    private void readVtpStream() {
         try {
             int source_id = Integer.reverseBytes(dataInputStream.readInt());
             int total_length = Integer.reverseBytes(dataInputStream.readInt());
@@ -183,7 +109,7 @@ public class VtpListeningServer {
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
-                decodePayload_2(dataBuffer);
+                decodePayload(dataBuffer);
 
                 totalData = totalData + (double) total_length / 1000.0;
                 rate++;
@@ -207,7 +133,7 @@ public class VtpListeningServer {
         }
     }
 
-    private void decodePayload_2(byte[] payload) {
+    private void decodePayload(byte[] payload) {
         ByteBuffer bb = ByteBuffer.wrap(payload);
         bb.order(ByteOrder.LITTLE_ENDIAN);
         int[] slot_ind = new int[8];
@@ -217,32 +143,15 @@ public class VtpListeningServer {
             slot_len[jj] = Utility.getUnsignedShort(bb);
         }
         bb.rewind();
-        for(int i = 0; i<8; i++) {
-             if (slot_ind[i] > 0 && slot_len[i] > 0) {
-                 for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
-                     long payload_data_point = Utility.getUnsignedInt(bb);
-                 }
-             }
-        }
-// System.out.println("slot_ind= " + slot_ind + " slot_len= " + slot_len + " " + payload.length + " limit= " + bb.limit());
-// System.out.println();
-    }
-
-    private void decodePayload(long[] payload, BigInteger frame_time_ns) {
-        for (int jj = 1; jj < 9; jj++) /* loop over 8 words, each word corresponds to one FADC slot */ {
-            long val = payload[jj];
-            long slot_ind = (val >> 0) & 0xFFFF; /*extract index for this FADC data*/
-            long slot_len = (val >> 16) & 0xFFFF; /*extract length for this FADC data*/
-
-            System.out.printf("slot_ind=%d, slot_len=%d\n", slot_ind, slot_len);
-
-//            decodeSlotData(payload, (int) slot_ind, slot_len, frame_time_ns);
-
-            System.out.println();
-
-
+        for (int i = 0; i < 8; i++) {
+            if (slot_ind[i] > 0 && slot_len[i] > 0) {
+                for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
+                    long payload_data_point = Utility.getUnsignedInt(bb);
+                }
+            }
         }
     }
+
 
     private void decodeSlotData(long[] payload, int slot_ind, long slot_len, BigInteger frame_time_ns) {
         boolean print = true;
@@ -273,6 +182,13 @@ public class VtpListeningServer {
         }
     }
 
+    public void receiveSoftStream() {
+        while (true) readSoftStream();
+    }
+
+    public void receiveVtpStream() {
+        while (true) readVtpStream();
+    }
 
     private class PrintRates extends TimerTask {
 
@@ -292,9 +208,35 @@ public class VtpListeningServer {
     }
 
     public static void main(String[] args) {
-        VtpListeningServer vtp = new VtpListeningServer();
-        while (true) vtp.readVtpFrame_2();
-//        while (true) vtp.readSoftFrame_2();
+        if (args.length == 3) {
+            if (args[0].equals("-p")) {
+                streamSourcePort = Integer.parseInt(args[1]);
+            } else if (args[0].equals("-s")) {
+                isSoftwareStream = true;
+            }
+            if (args[1].equals("-p")) {
+                streamSourcePort = Integer.parseInt(args[2]);
+            } else if (args[1].equals("-s")) {
+                isSoftwareStream = true;
+            }
+            if(args[2].equals("-s")) {
+                isSoftwareStream = true;
+            }
+        } else if (args.length == 2) {
+            if (args[0].equals("-p")) {
+                streamSourcePort = Integer.parseInt(args[1]);
+            }
+        } else if (args.length == 1) {
+            if (args[0].equals("-s")) {
+                isSoftwareStream = true;
+            }
+        }
+        StreamReceiver sr = new StreamReceiver();
+        if (isSoftwareStream) {
+            sr.receiveSoftStream();
+        } else {
+            sr.receiveVtpStream();
+        }
     }
 }
 

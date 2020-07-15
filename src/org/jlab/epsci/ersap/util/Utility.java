@@ -1,3 +1,5 @@
+package org.jlab.epsci.ersap.util;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
