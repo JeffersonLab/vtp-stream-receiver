@@ -158,8 +158,7 @@ public class StreamReceiver {
                         type = (payload_data_point >> 15) & 0xFFFF;
                         rocid = (payload_data_point >> 8) & 0x007F;
                         slot = (payload_data_point) & 0x001F;
-                    }
-                    if (type == 0x0001) /* FADC hit type */ {
+                    }else if (type == 0x0001) /* FADC hit type */ {
                         q = (payload_data_point) & 0x1FFF;
                         ch = (payload_data_point >> 13) & 0x000F;
                         t = ((payload_data_point >> 17) & 0x3FFF) * 4;
@@ -215,6 +214,7 @@ public class StreamReceiver {
                 System.out.println("event rate =" + rate
                         + " Hz.  data rate =" + totalData + " kB/s." +
                         " missed rate = " + missed_record + " Hz.");
+                System.out.println("type    = " + type);
                 System.out.println("rocId    = " + rocid);
                 System.out.println("slot     = " + slot);
                 System.out.println("q        = " + q);
