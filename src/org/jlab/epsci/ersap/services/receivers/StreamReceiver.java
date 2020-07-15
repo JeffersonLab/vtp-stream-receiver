@@ -198,9 +198,9 @@ public class StreamReceiver {
                         + " Hz.  data rate =" + totalData + " kB/s." +
                         " missed rate = " + missed_record + " Hz.");
                 loop = 10;
-                rate = 0;
-                missed_record = 0;
             }
+            rate = 0;
+            missed_record = 0;
             totalData = 0;
             loop--;
         }
