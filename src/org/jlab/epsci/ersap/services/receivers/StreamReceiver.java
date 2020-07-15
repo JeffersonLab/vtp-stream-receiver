@@ -1,5 +1,6 @@
 package org.jlab.epsci.ersap.services.receivers;
 
+import com.sun.scenario.effect.impl.sw.java.JSWBlend_SRC_OUTPeer;
 import org.jlab.epsci.ersap.util.Utility;
 
 import java.io.*;
@@ -159,6 +160,7 @@ public class StreamReceiver {
                         rocid = (payload_data_point >> 8) & 0x007F;
                         slot = (payload_data_point) & 0x001F;
                     }
+                    System.out.println("type = "+Long.toHexString(type));
                     if (type == 0x0001) /* FADC hit type */ {
                         q = (payload_data_point) & 0x1FFF;
                         ch = (payload_data_point >> 13) & 0x000F;
@@ -167,6 +169,7 @@ public class StreamReceiver {
                 }
             }
         }
+        System.out.println();
     }
 
     private void decodeSlotData(long[] payload, int slot_ind, long slot_len, BigInteger frame_time_ns) {
