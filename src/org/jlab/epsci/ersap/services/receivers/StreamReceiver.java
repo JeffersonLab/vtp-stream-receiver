@@ -16,13 +16,20 @@ public class StreamReceiver {
     private DataInputStream dataInputStream;
     private static BigInteger FRAME_TIME;
     private static final long ft_const = 65536L;
+    private static int streamSourcePort = 6000;
+    private static boolean isSoftwareStream = false;
 
     private volatile double totalData;
     private int loop = 10;
     private int rate;
+    // payload
+    long type;
+    long rocid;
+    long slot;
+    long q;
+    long ch;
+    long t;
 
-    private static int streamSourcePort = 6000;
-    private static boolean isSoftwareStream = false;
     private long prev_rec_number;
     private int missed_record;
 
@@ -147,6 +154,16 @@ public class StreamReceiver {
             if (slot_ind[i] > 0 && slot_len[i] > 0) {
                 for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
                     long payload_data_point = Utility.getUnsignedInt(bb);
+                    if ((payload_data_point & 0x80000000) > 0x0) {
+                        long type = (payload_data_point >> 15) & 0xFFFF;
+                        long rocid = (payload_data_point >> 8) & 0x007F;
+                        long slot = (payload_data_point) & 0x001F;
+                    }
+                    if (type == 0x0001) /* FADC hit type */ {
+                        long q = (payload_data_point) & 0x1FFF;
+                        long ch = (payload_data_point >> 13) & 0x000F;
+                        long t = ((payload_data_point >> 17) & 0x3FFF) * 4;
+                    }
                 }
             }
         }
@@ -194,9 +211,15 @@ public class StreamReceiver {
         @Override
         public void run() {
             if (loop <= 0) {
+                System.out.println("---------------------------------");
                 System.out.println("event rate =" + rate
                         + " Hz.  data rate =" + totalData + " kB/s." +
                         " missed rate = " + missed_record + " Hz.");
+                System.out.println("rocId    = " + rocid);
+                System.out.println("slot     = " + slot);
+                System.out.println("q        = " + q);
+                System.out.println("ch       = " + ch);
+                System.out.println("----------------------------------");
                 loop = 10;
             }
             rate = 0;
@@ -218,7 +241,7 @@ public class StreamReceiver {
             } else if (args[1].equals("-s")) {
                 isSoftwareStream = true;
             }
-            if(args[2].equals("-s")) {
+            if (args[2].equals("-s")) {
                 isSoftwareStream = true;
             }
         } else if (args.length == 2) {
