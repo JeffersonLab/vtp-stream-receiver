@@ -152,7 +152,6 @@ public class StreamReceiver {
         }
     }
 
-
     private void decodeSlotData(long[] payload, int slot_ind, long slot_len, BigInteger frame_time_ns) {
         boolean print = true;
         long type = 0, rocid = 0, slot = 0;
