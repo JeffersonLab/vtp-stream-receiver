@@ -155,14 +155,14 @@ public class StreamReceiver {
                 for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
                     long payload_data_point = Utility.getUnsignedInt(bb);
                     if ((payload_data_point & 0x80000000) > 0x0) {
-                        long type = (payload_data_point >> 15) & 0xFFFF;
-                        long rocid = (payload_data_point >> 8) & 0x007F;
-                        long slot = (payload_data_point) & 0x001F;
+                        type = (payload_data_point >> 15) & 0xFFFF;
+                        rocid = (payload_data_point >> 8) & 0x007F;
+                        slot = (payload_data_point) & 0x001F;
                     }
                     if (type == 0x0001) /* FADC hit type */ {
-                        long q = (payload_data_point) & 0x1FFF;
-                        long ch = (payload_data_point >> 13) & 0x000F;
-                        long t = ((payload_data_point >> 17) & 0x3FFF) * 4;
+                        q = (payload_data_point) & 0x1FFF;
+                        ch = (payload_data_point >> 13) & 0x000F;
+                        t = ((payload_data_point >> 17) & 0x3FFF) * 4;
                     }
                 }
             }
@@ -219,6 +219,7 @@ public class StreamReceiver {
                 System.out.println("slot     = " + slot);
                 System.out.println("q        = " + q);
                 System.out.println("ch       = " + ch);
+                System.out.println("t        = " + t);
                 System.out.println("----------------------------------");
                 loop = 10;
             }
