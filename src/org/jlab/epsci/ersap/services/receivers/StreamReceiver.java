@@ -167,15 +167,16 @@ public class StreamReceiver {
                             type = (payload_data_point >> 15) & 0xFFFF;
                             int rocid = (payload_data_point >> 8) & 0x007F;
                             int slot = (payload_data_point) & 0x001F;
+                            System.out.println("type = "+type+" roc_id = "+rocid+" slot = "+slot);
                         }
                         if (type == 0x0001) /* FADC hit type */ {
-                            System.out.println("type = "+type+" roc_id = "+rocid+" slot = "+slot);
+//                            System.out.println("type = "+type+" roc_id = "+rocid+" slot = "+slot);
                             int q = (payload_data_point) & 0x1FFF;
                             int ch = (payload_data_point >> 13) & 0x000F;
                             int t = ((payload_data_point >> 17) & 0x3FFF) * 4;
                         }
                     }
-                    System.out.println("at exit "+bb.position());
+//                    System.out.println("at exit "+bb.position());
                 }
             }
         System.out.println();
