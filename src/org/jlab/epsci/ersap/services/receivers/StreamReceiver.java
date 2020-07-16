@@ -169,7 +169,7 @@ public class StreamReceiver {
                             int slot = (payload_data_point) & 0x001F;
                         }
                         if (type == 0x0001) /* FADC hit type */ {
-                            System.out.println("type = "+type+" roc_id = "+rocid+" slot = "+slot);
+//                            System.out.println("type = "+type+" roc_id = "+rocid+" slot = "+slot);
                             int q = (payload_data_point) & 0x1FFF;
                             int ch = (payload_data_point >> 13) & 0x000F;
                             int t = ((payload_data_point >> 17) & 0x3FFF) * 4;
