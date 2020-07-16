@@ -153,6 +153,7 @@ public class StreamReceiver {
         bb.rewind();
         for (int i = 0; i < 8; i++) {
             if (slot_ind[i] > 0 && slot_len[i] > 0) {
+                System.out.println("slot_ind ="+slot_ind[i]+" "+"slot_len = "+slot_ind[i]);
                 for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
                     long payload_data_point = Utility.getUnsignedInt(bb);
                     if ((payload_data_point & 0x80000000) > 0x0) {
