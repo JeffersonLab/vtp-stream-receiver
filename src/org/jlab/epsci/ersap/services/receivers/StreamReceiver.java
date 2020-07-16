@@ -22,16 +22,11 @@ public class StreamReceiver {
     private volatile double totalData;
     private int loop = 10;
     private int rate;
-    // payload
-    long type;
-    long rocid;
-    long slot;
-    long q;
-    long ch;
-    long t;
 
     private long prev_rec_number;
     private long missed_record;
+
+    private boolean print = true;
 
     public StreamReceiver() {
         Timer timer = new Timer();
@@ -115,23 +110,11 @@ public class StreamReceiver {
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
-//                decodePayload(dataBuffer);
+                decodeVtpPayload(dataBuffer);
 
                 totalData = totalData + (double) total_length / 1000.0;
                 rate++;
-/*
-            System.out.println("source_id         = " + Long.toHexString(source_id));
-            System.out.println("total_length      = " + total_length);
-            System.out.println("payload_length    = " + payload_length);
-            System.out.println("compressed_length = " + compressed_length);
-            System.out.println("magic             = " + Long.toHexString(magic));
-            System.out.println("format_version    = " + Long.toHexString(format_version));
-            System.out.println("flags             = " + Long.toHexString(flags));
-            System.out.println("record_number     = " + record_number);
-            System.out.println("ts_sec            = " + ts_sec);
-            System.out.println("ts_nsec           = " + ts_nsec);
-            System.out.println("frame_time_ns     = " + frame_time_ns);
-*/
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -139,7 +122,7 @@ public class StreamReceiver {
         }
     }
 
-    private void decodePayload(byte[] payload) {
+    private void decodeVtpPayload(byte[] payload) {
         ByteBuffer bb = ByteBuffer.wrap(payload);
         bb.order(ByteOrder.LITTLE_ENDIAN);
         int[] slot_ind = new int[8];
@@ -151,7 +134,6 @@ public class StreamReceiver {
                 slot_ind[jj] = Utility.getUnsignedShort(bb);
                 slot_len[jj] = Utility.getUnsignedShort(bb);
             }
-//            bb.rewind();
             for (int i = 0; i < 8; i++) {
                 if (slot_len[i] > 0) {
                     bb.position(slot_ind[i]);
@@ -160,24 +142,27 @@ public class StreamReceiver {
 //                            " slot_ind = "+slot_ind[i]+
 //                            " slot_len = "+slot_len[i]);
                     for (int j = 0; j < slot_len[i]; j++) {
-                        int payload_data_point = bb.getInt();
+                        int val = bb.getInt();
                         int type = 0;
-                        if ((payload_data_point & 0x80000000) == 0x80000000) {
-                            type = (payload_data_point >> 15) & 0xFFFF;
-                            int rocid = (payload_data_point >> 8) & 0x007F;
-                            int slot = (payload_data_point) & 0x001F;
+                        if ((val & 0x80000000) == 0x80000000) {
+                            type = (val >> 15) & 0xFFFF;
+                            int rocid = (val >> 8) & 0x007F;
+                            int slot = (val) & 0x001F;
+                            if(print) {
+                                System.out.println("type = "+type +
+                                        " roc_id = "+ rocid +
+                                        " slot = " + slot);
+                                print = false;
+                            }
                         }
                         if (type == 0x0001) /* FADC hit type */ {
-//                            System.out.println("type = "+type+" roc_id = "+rocid+" slot = "+slot);
-                            int q = (payload_data_point) & 0x1FFF;
-                            int ch = (payload_data_point >> 13) & 0x000F;
-                            int t = ((payload_data_point >> 17) & 0x3FFF) * 4;
+                            int q = (val) & 0x1FFF;
+                            int ch = (val >> 13) & 0x000F;
+                            int t = ((val >> 17) & 0x3FFF) * 4;
                         }
                     }
-//                    System.out.println("at exit "+bb.position());
                 }
             }
-//        System.out.println();
         }
     }
 
@@ -232,6 +217,7 @@ public class StreamReceiver {
             missed_record = 0;
             totalData = 0;
             loop--;
+            print = true;
         }
     }
 
