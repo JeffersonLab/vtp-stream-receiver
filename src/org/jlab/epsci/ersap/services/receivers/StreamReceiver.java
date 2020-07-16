@@ -115,7 +115,7 @@ public class StreamReceiver {
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
-                decodePayload(dataBuffer);
+//                decodePayload(dataBuffer);
 
                 totalData = totalData + (double) total_length / 1000.0;
                 rate++;
