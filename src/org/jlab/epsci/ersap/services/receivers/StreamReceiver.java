@@ -147,7 +147,6 @@ public class StreamReceiver {
         int[] slot_len = new int[8];
         long tag = Utility.getUnsignedInt(bb);
         if ((tag & 0x8FFF8000L) == 0x80000000L) {
-//        System.out.println(Long.toHexString(tag) + " " + Long.toHexString((tag & 0x8FFF8000)));
 
             for (int jj = 0; jj < 8; jj++) {
                 slot_ind[jj] = Utility.getUnsignedShort(bb);
@@ -158,7 +157,10 @@ public class StreamReceiver {
             System.out.println("slot_ind =" + slot_ind[i] + " " + "slot_len = " + slot_len[i]);
                 if (slot_len[i] > 0) {
                     bb.position(slot_ind[i]);
-                    System.out.println("at entrance "+bb.position()+" words = "+slot_len[i]/4);
+                    System.out.println("at entrance "+bb.position()+
+                            " words = "+slot_len[i]/4+
+                            " slot_ind = "+slot_ind[i]+
+                            " slot_len = "+slot_len[i]);
                     for (int j = 0; j < slot_len[i] / 4; j++) {
                         long payload_data_point = Utility.getUnsignedInt(bb);
 //                        if ((payload_data_point & 0x80000000L) == 0x80000000L) {
