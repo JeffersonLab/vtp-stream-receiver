@@ -77,7 +77,7 @@ public class StreamReceiver {
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
 */
-            missed_record = missed_record + (record_number - prev_rec_number);
+            missed_record = missed_record + (record_number - (prev_rec_number+1));
             prev_rec_number = record_number;
 
             byte[] dataBuffer = new byte[total_length - (12 * 4)];
@@ -109,13 +109,13 @@ public class StreamReceiver {
                 long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
                 long frame_time_ns = record_number * ft_const;
 
-                missed_record = missed_record + (record_number - prev_rec_number);
+                missed_record = missed_record + (record_number - (prev_rec_number+1));
                 prev_rec_number = record_number;
 
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
-//                decodePayload(dataBuffer);
+                decodePayload(dataBuffer);
 
                 totalData = totalData + (double) total_length / 1000.0;
                 rate++;
