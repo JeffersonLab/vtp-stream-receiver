@@ -158,7 +158,7 @@ public class StreamReceiver {
             System.out.println("slot_ind =" + slot_ind[i] + " " + "slot_len = " + slot_len[i]);
                 if (slot_len[i] > 0) {
                     bb.position(slot_ind[i]);
-                    System.out.println("at entrance "+bb.position());
+                    System.out.println("at entrance "+bb.position()+" words = "+slot_len[i]/4);
                     for (int j = 0; j < slot_len[i] / 4; j++) {
                         long payload_data_point = Utility.getUnsignedInt(bb);
 //                        if ((payload_data_point & 0x80000000L) == 0x80000000L) {
