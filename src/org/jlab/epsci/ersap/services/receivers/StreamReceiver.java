@@ -153,14 +153,14 @@ public class StreamReceiver {
         bb.rewind();
         for (int i = 0; i < 8; i++) {
             if (slot_ind[i] > 0 && slot_len[i] > 0) {
-                System.out.println("slot_ind ="+slot_ind[i]+" "+"slot_len = "+slot_ind[i]);
                 for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
                     long payload_data_point = Utility.getUnsignedInt(bb);
                     if ((payload_data_point & 0x80000000) > 0x0) {
                         type = (payload_data_point >> 15) & 0xFFFF;
                         rocid = (payload_data_point >> 8) & 0x007F;
                         slot = (payload_data_point) & 0x001F;
-//                        System.out.println("type = "+type +" rocid = "+ rocid+" slot = "+slot);
+                        System.out.println("slot_ind ="+slot_ind[i]+" "+"slot_len = "+slot_ind[i]);
+                        System.out.println("type = "+type +" rocid = "+ rocid+" slot = "+slot);
                     }
                     if (type == 0x0001) /* FADC hit type */ {
                         q = (payload_data_point) & 0x1FFF;
