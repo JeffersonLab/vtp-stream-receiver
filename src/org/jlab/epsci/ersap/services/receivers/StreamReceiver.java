@@ -26,8 +26,6 @@ public class StreamReceiver {
     private long prev_rec_number;
     private long missed_record;
 
-    private boolean print = true;
-
     public StreamReceiver() {
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
@@ -148,12 +146,6 @@ public class StreamReceiver {
                             type = (val >> 15) & 0xFFFF;
                             int rocid = (val >> 8) & 0x007F;
                             int slot = (val) & 0x001F;
-                            if(print) {
-                                System.out.println("type = "+type +
-                                        " roc_id = "+ rocid +
-                                        " slot = " + slot);
-                                print = false;
-                            }
                         }
                         if (type == 0x0001) /* FADC hit type */ {
                             int q = (val) & 0x1FFF;
@@ -212,7 +204,6 @@ public class StreamReceiver {
                         + " Hz.  data rate =" + totalData + " kB/s." +
                         " missed rate = " + missed_record + " Hz.");
                 loop = 10;
-                print = true;
             }
             rate = 0;
             missed_record = 0;
