@@ -147,34 +147,34 @@ public class StreamReceiver {
         int[] slot_ind = new int[8];
         int[] slot_len = new int[8];
         long tag = Utility.getUnsignedInt(bb);
-        if ((tag & 0x8FFF8000) == 0x80000000) {
-            System.out.println(Long.toHexString(tag) +" "+Long.toHexString((tag & 0x8FFF8000)));
+//        if ((tag & 0x8FFF8000) == 0x80000000) {
+//        System.out.println(Long.toHexString(tag) + " " + Long.toHexString((tag & 0x8FFF8000)));
 
-            for (int jj = 0; jj < 8; jj++) {
-                slot_ind[jj] = Utility.getUnsignedShort(bb);
-                slot_len[jj] = Utility.getUnsignedShort(bb);
-            }
-            bb.rewind();
-            for (int i = 0; i < 8; i++) {
-                System.out.println("slot_ind =" + slot_ind[i] + " " + "slot_len = " + slot_len[i]);
-                if (slot_len[i] > 0) {
-                    for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
-                        long payload_data_point = Utility.getUnsignedInt(bb);
-                        if ((payload_data_point & 0x80000000) > 0x0) {
-                            type = (payload_data_point >> 15) & 0xFFFF;
-                            rocid = (payload_data_point >> 8) & 0x007F;
-                            slot = (payload_data_point) & 0x001F;
+        for (int jj = 0; jj < 8; jj++) {
+            slot_ind[jj] = Utility.getUnsignedShort(bb);
+            slot_len[jj] = Utility.getUnsignedShort(bb);
+        }
+        bb.rewind();
+        for (int i = 0; i < 8; i++) {
+            System.out.println("slot_ind =" + slot_ind[i] + " " + "slot_len = " + slot_len[i]);
+            if (slot_len[i] > 0) {
+                for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
+                    long payload_data_point = Utility.getUnsignedInt(bb);
+                    if ((payload_data_point & 0x80000000) > 0x0) {
+                        type = (payload_data_point >> 15) & 0xFFFF;
+                        rocid = (payload_data_point >> 8) & 0x007F;
+                        slot = (payload_data_point) & 0x001F;
 //                            System.out.println("type = " + type + " rocid = " + rocid + " slot = " + slot);
-                        } else if (type == 0x0001) /* FADC hit type */ {
-                            q = (payload_data_point) & 0x1FFF;
-                            ch = (payload_data_point >> 13) & 0x000F;
-                            t = ((payload_data_point >> 17) & 0x3FFF) * 4;
-                        }
+                    } else if (type == 0x0001) /* FADC hit type */ {
+                        q = (payload_data_point) & 0x1FFF;
+                        ch = (payload_data_point >> 13) & 0x000F;
+                        t = ((payload_data_point >> 17) & 0x3FFF) * 4;
                     }
                 }
             }
-            System.out.println();
         }
+        System.out.println();
+//    }
     }
 
     private void decodeSlotData(long[] payload, int slot_ind, long slot_len, BigInteger frame_time_ns) {
