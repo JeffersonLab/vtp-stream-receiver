@@ -222,12 +222,14 @@ public class StreamReceiver {
                 System.out.println("event rate =" + rate
                         + " Hz.  data rate =" + totalData + " kB/s." +
                         " missed rate = " + missed_record + " Hz.");
-                System.out.println("type    = " + type);
-                System.out.println("rocId    = " + rocid);
-                System.out.println("slot     = " + slot);
-                System.out.println("q        = " + q);
-                System.out.println("ch       = " + ch);
-                System.out.println("t        = " + t);
+                if(type == 1) {
+                    System.out.println("type    = " + type);
+                    System.out.println("rocId    = " + rocid);
+                    System.out.println("slot     = " + slot);
+                    System.out.println("q        = " + q);
+                    System.out.println("ch       = " + ch);
+                    System.out.println("t        = " + t);
+                }
                 System.out.println("----------------------------------");
                 loop = 10;
             }
