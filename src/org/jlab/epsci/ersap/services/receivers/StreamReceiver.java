@@ -146,7 +146,7 @@ public class StreamReceiver {
         int[] slot_ind = new int[8];
         int[] slot_len = new int[8];
         long tag = Utility.getUnsignedInt(bb);
-        if ((tag & 0x8FFF8000) == 0x80000000) {
+        if ((tag & 0x8FFF8000L) == 0x80000000L) {
 //        System.out.println(Long.toHexString(tag) + " " + Long.toHexString((tag & 0x8FFF8000)));
 
             for (int jj = 0; jj < 8; jj++) {
