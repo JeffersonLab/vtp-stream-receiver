@@ -153,10 +153,11 @@ public class StreamReceiver {
                 slot_ind[jj] = Utility.getUnsignedShort(bb);
                 slot_len[jj] = Utility.getUnsignedShort(bb);
             }
-            bb.rewind();
+//            bb.rewind();
             for (int i = 0; i < 8; i++) {
 //            System.out.println("slot_ind =" + slot_ind[i] + " " + "slot_len = " + slot_len[i]);
                 if (slot_len[i] > 0) {
+                    bb.position(slot_ind[i]);
                     for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
                         long payload_data_point = Utility.getUnsignedInt(bb);
                         if ((payload_data_point & 0x80000000) > 0x0) {
