@@ -173,7 +173,7 @@ public class StreamReceiver {
                 }
             }
         }
-        System.out.println();
+//        System.out.println();
 //    }
     }
 
