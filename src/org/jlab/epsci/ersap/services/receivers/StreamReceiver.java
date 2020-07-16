@@ -155,7 +155,7 @@ public class StreamReceiver {
             }
 //            bb.rewind();
             for (int i = 0; i < 8; i++) {
-//            System.out.println("slot_ind =" + slot_ind[i] + " " + "slot_len = " + slot_len[i]);
+            System.out.println("slot_ind =" + slot_ind[i] + " " + "slot_len = " + slot_len[i]);
                 if (slot_len[i] > 0) {
                     bb.position(slot_ind[i]);
                     for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
@@ -166,7 +166,7 @@ public class StreamReceiver {
                             slot = (payload_data_point) & 0x001FL;
                         }
                         if (type == 0x0001L) /* FADC hit type */ {
-                            System.out.println("type = "+type+" roc_id = "+rocid+" slot = "+slot);
+//                            System.out.println("type = "+type+" roc_id = "+rocid+" slot = "+slot);
                             q = (payload_data_point) & 0x1FFFL;
                             ch = (payload_data_point >> 13) & 0x000FL;
                             t = ((payload_data_point >> 17) & 0x3FFFL) * 4;
