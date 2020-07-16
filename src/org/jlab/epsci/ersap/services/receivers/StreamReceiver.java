@@ -160,12 +160,13 @@ public class StreamReceiver {
             if (slot_len[i] > 0) {
                 for (int j = slot_ind[i] * 4; j < slot_len[i] / 4; j++) {
                     long payload_data_point = Utility.getUnsignedInt(bb);
-                    if ((payload_data_point & 0x80000000) > 0x0) {
+//                    if ((payload_data_point & 0x80000000) > 0x0) {
                         type = (payload_data_point >> 15) & 0xFFFF;
                         rocid = (payload_data_point >> 8) & 0x007F;
                         slot = (payload_data_point) & 0x001F;
                             System.out.println("type = " + type + " rocid = " + rocid + " slot = " + slot);
-                    } else if (type == 0x0001) /* FADC hit type */ {
+//                    }
+                    if (type == 0x0001) /* FADC hit type */ {
                         q = (payload_data_point) & 0x1FFF;
                         ch = (payload_data_point >> 13) & 0x000F;
                         t = ((payload_data_point >> 17) & 0x3FFF) * 4;
