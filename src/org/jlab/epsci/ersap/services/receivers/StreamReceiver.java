@@ -154,26 +154,26 @@ public class StreamReceiver {
             }
 //            bb.rewind();
             for (int i = 0; i < 8; i++) {
-            System.out.println("slot_ind =" + slot_ind[i] + " " + "slot_len = " + slot_len[i]);
                 if (slot_len[i] > 0) {
                     bb.position(slot_ind[i]);
-                    System.out.println("at entrance "+bb.position()+
-                            " words = "+slot_len[i]/4+
-                            " slot_ind = "+slot_ind[i]+
-                            " slot_len = "+slot_len[i]);
+//                    System.out.println("at entrance "+bb.position()+
+//                            " words = "+slot_len[i]/4+
+//                            " slot_ind = "+slot_ind[i]+
+//                            " slot_len = "+slot_len[i]);
                     for (int j = 0; j < slot_len[i] / 4; j++) {
-                        long payload_data_point = Utility.getUnsignedInt(bb);
-//                        if ((payload_data_point & 0x80000000L) == 0x80000000L) {
-//                            type = (payload_data_point >> 15) & 0xFFFFL;
-//                            rocid = (payload_data_point >> 8) & 0x007FL;
-//                            slot = (payload_data_point) & 0x001FL;
-//                        }
-//                        if (type == 0x0001L) /* FADC hit type */ {
-////                            System.out.println("type = "+type+" roc_id = "+rocid+" slot = "+slot);
-//                            q = (payload_data_point) & 0x1FFFL;
-//                            ch = (payload_data_point >> 13) & 0x000FL;
-//                            t = ((payload_data_point >> 17) & 0x3FFFL) * 4;
-//                        }
+                        int payload_data_point = bb.getInt();
+                        int type = 0;
+                        if ((payload_data_point & 0x80000000) == 0x80000000) {
+                            type = (payload_data_point >> 15) & 0xFFFF;
+                            int rocid = (payload_data_point >> 8) & 0x007F;
+                            int slot = (payload_data_point) & 0x001F;
+                        }
+                        if (type == 0x0001) /* FADC hit type */ {
+                            System.out.println("type = "+type+" roc_id = "+rocid+" slot = "+slot);
+                            int q = (payload_data_point) & 0x1FFF;
+                            int ch = (payload_data_point >> 13) & 0x000F;
+                            int t = ((payload_data_point >> 17) & 0x3FFF) * 4;
+                        }
                     }
                     System.out.println("at exit "+bb.position());
                 }
