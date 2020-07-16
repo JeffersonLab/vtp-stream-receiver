@@ -1,5 +1,6 @@
 package org.jlab.epsci.ersap.services.receivers;
 
+import org.cliffc.high_scale_lib.NonBlockingHashMap;
 import org.jlab.epsci.ersap.util.Utility;
 
 import java.io.*;
@@ -26,7 +27,10 @@ public class StreamReceiver {
     private long prev_rec_number;
     private long missed_record;
 
+    private NonBlockingHashMap<Long, byte[]> stream1;
     public StreamReceiver() {
+        stream1 = new NonBlockingHashMap<>();
+
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
 
@@ -107,6 +111,8 @@ public class StreamReceiver {
 
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
+
+                stream1.put(record_number,dataBuffer);
 
                 decodeVtpPayload(dataBuffer);
 
