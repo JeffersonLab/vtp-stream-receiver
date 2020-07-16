@@ -160,7 +160,7 @@ public class StreamReceiver {
 //                            " words = "+slot_len[i]/4+
 //                            " slot_ind = "+slot_ind[i]+
 //                            " slot_len = "+slot_len[i]);
-                    for (int j = 0; j < slot_len[i] / 4; j++) {
+                    for (int j = 0; j < slot_len[i]; j++) {
                         int payload_data_point = bb.getInt();
                         int type = 0;
                         if ((payload_data_point & 0x80000000) == 0x80000000) {
