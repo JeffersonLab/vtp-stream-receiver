@@ -157,7 +157,6 @@ public class StreamReceiver {
                 if (slot_len[i] > 0) {
                     bb.position(slot_ind[i]);
 //                    System.out.println("at entrance "+bb.position()+
-//                            " words = "+slot_len[i]/4+
 //                            " slot_ind = "+slot_ind[i]+
 //                            " slot_len = "+slot_len[i]);
                     for (int j = 0; j < slot_len[i]; j++) {
@@ -224,17 +223,9 @@ public class StreamReceiver {
         @Override
         public void run() {
             if (loop <= 0) {
-                System.out.println("---------------------------------");
                 System.out.println("event rate =" + rate
                         + " Hz.  data rate =" + totalData + " kB/s." +
                         " missed rate = " + missed_record + " Hz.");
-                    System.out.println("type    = " + type);
-                    System.out.println("rocId    = " + rocid);
-                    System.out.println("slot     = " + slot);
-                    System.out.println("q        = " + q);
-                    System.out.println("ch       = " + ch);
-                    System.out.println("t        = " + t);
-                System.out.println("----------------------------------");
                 loop = 10;
             }
             rate = 0;
