@@ -30,8 +30,7 @@ public class StreamReceiver {
     long ch;
     long t;
 
-    private long prev_rec_number;
-    private int missed_record;
+    private long rec_number;
 
     public StreamReceiver() {
         Timer timer = new Timer();
@@ -77,9 +76,7 @@ public class StreamReceiver {
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
 */
-            System.out.println("record_number     = " + record_number);
-            if (record_number != (prev_rec_number + 1)) missed_record++;
-            prev_rec_number = record_number;
+            rec_number = record_number;
 
             byte[] dataBuffer = new byte[total_length - (12 * 4)];
             dataInputStream.readFully(dataBuffer);
@@ -110,8 +107,7 @@ public class StreamReceiver {
                 long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
                 long frame_time_ns = record_number * ft_const;
 
-                if (record_number != (prev_rec_number + 1)) missed_record++;
-                prev_rec_number = record_number;
+                rec_number = record_number;
 
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
@@ -223,13 +219,14 @@ public class StreamReceiver {
         @Override
         public void run() {
             if (loop <= 0) {
+                long missed_records = rec_number - rate;
                 System.out.println("event rate =" + rate
                         + " Hz.  data rate =" + totalData + " kB/s." +
-                        " missed rate = " + missed_record + " Hz.");
+                        " missed rate = " + missed_records + " Hz.");
                 loop = 10;
             }
             rate = 0;
-            missed_record = 0;
+            rec_number = 0;
             totalData = 0;
             loop--;
         }
