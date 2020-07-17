@@ -133,8 +133,8 @@ public class StreamReceiver {
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
-                stream1.put(record_number, dataBuffer);
-                stream1.remove(record_number);
+//                stream1.put(record_number, dataBuffer);
+//                stream1.remove(record_number);
 
 //                decodeVtpPayload(dataBuffer);
 
