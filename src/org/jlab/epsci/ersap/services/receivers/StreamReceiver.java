@@ -40,18 +40,14 @@ public class StreamReceiver {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
             for (long i = 1; i < Long.MAX_VALUE; i++) {
-                if (stream1.contains(i)) {
-                    System.out.println(i);
+                try {
+                    while (!stream1.contains(i)) {
+                        Thread.sleep(10);
+                    }
                     decodeVtpPayload(stream1.get(i));
                     stream1.remove(i);
-                } else {
-                    try {
-                        while (!stream1.contains(i)) {
-                            Thread.sleep(10);
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });
