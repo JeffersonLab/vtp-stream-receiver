@@ -39,21 +39,19 @@ public class StreamReceiver {
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
-             if(!stream1.isEmpty()){
-                 for (long i = 1; i < Long.MAX_VALUE; i++){
-                     if(stream1.contains(i)){
-                         System.out.println(i);
-                         decodeVtpPayload(stream1.get(i));
-                         stream1.remove(i);
-                     } else {
-                         try {
-                             Thread.sleep(10);
-                         } catch (InterruptedException e) {
-                             e.printStackTrace();
-                         }
-                     }
-                 }
-             }
+            for (long i = 1; i < Long.MAX_VALUE; i++) {
+                if (stream1.contains(i)) {
+                    System.out.println(i);
+                    decodeVtpPayload(stream1.get(i));
+                    stream1.remove(i);
+                } else {
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         });
 
 
@@ -97,7 +95,7 @@ public class StreamReceiver {
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
 */
-            missed_record = missed_record + (record_number - (prev_rec_number+1));
+            missed_record = missed_record + (record_number - (prev_rec_number + 1));
             prev_rec_number = record_number;
 
             byte[] dataBuffer = new byte[total_length - (12 * 4)];
@@ -129,13 +127,13 @@ public class StreamReceiver {
                 long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
                 long frame_time_ns = record_number * ft_const;
 
-                missed_record = missed_record + (record_number - (prev_rec_number+1));
+                missed_record = missed_record + (record_number - (prev_rec_number + 1));
                 prev_rec_number = record_number;
 
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
-                stream1.put(record_number,dataBuffer);
+                stream1.put(record_number, dataBuffer);
 
 //                decodeVtpPayload(dataBuffer);
 
