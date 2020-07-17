@@ -84,7 +84,7 @@ public class StreamReceiver {
             long ts_sec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
             long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
 
-/*
+
             System.out.println("source_id         = " + Integer.toHexString(source_id));
             System.out.println("total_length      = " + total_length);
             System.out.println("payload_length    = " + payload_length);
@@ -94,7 +94,7 @@ public class StreamReceiver {
             System.out.println("record_number     = " + record_number);
             System.out.println("ts_sec            = " + ts_sec);
             System.out.println("ts_nsec           = " + ts_nsec);
-*/
+
             missed_record = missed_record + (record_number - (prev_rec_number + 1));
             prev_rec_number = record_number;
 
@@ -135,7 +135,6 @@ public class StreamReceiver {
 
 //                stream1.put(record_number, dataBuffer);
 //                stream1.remove(record_number);
-
 //                decodeVtpPayload(dataBuffer);
 
                 totalData = totalData + (double) total_length / 1000.0;
