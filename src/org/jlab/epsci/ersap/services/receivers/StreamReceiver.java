@@ -46,6 +46,7 @@ public class StreamReceiver {
                     stream1.remove(i);
                 } else {
                     try {
+                        System.out.println(i+ " "+stream1.contains(i) +" "+stream1.contains(new Long(i)));
                         Thread.sleep(10);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
