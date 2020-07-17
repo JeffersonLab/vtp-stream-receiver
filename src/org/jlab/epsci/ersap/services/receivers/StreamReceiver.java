@@ -30,7 +30,6 @@ public class StreamReceiver {
     private long missed_record;
 
     private NonBlockingHashMap<Long, byte[]> stream1;
-    private Thread payloadProcessor;
 
     public StreamReceiver() {
         stream1 = new NonBlockingHashMap<>();
@@ -38,13 +37,6 @@ public class StreamReceiver {
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
 
-        Runnable runnable = () -> {
-            for (long i = 0; i < Long.MAX_VALUE; i++) {
-                decodeVtpPayload(stream1.get(i));
-                stream1.remove(i);
-            }
-        };
-        payloadProcessor = new Thread(runnable);
 
         FRAME_TIME = Utility.toUnsignedBigInteger(ft_const);
         ServerSocket serverSocket;
@@ -60,6 +52,22 @@ public class StreamReceiver {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Runnable runnable = () -> {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            for (long i = 0; i < Long.MAX_VALUE; i++) {
+                decodeVtpPayload(stream1.get(i));
+                stream1.remove(i);
+            }
+        };
+
+        Thread payloadProcessor = new Thread(runnable);
+        payloadProcessor.start();
+
     }
 
     private void readSoftStream() {
@@ -125,7 +133,6 @@ public class StreamReceiver {
                 dataInputStream.readFully(dataBuffer);
 
                 stream1.put(record_number, dataBuffer);
-                payloadProcessor.start();
 
 //                decodeVtpPayload(dataBuffer);
 
