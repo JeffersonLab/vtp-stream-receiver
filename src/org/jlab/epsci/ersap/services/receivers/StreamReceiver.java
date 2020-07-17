@@ -28,10 +28,10 @@ public class StreamReceiver {
     private long prev_rec_number;
     private long missed_record;
 
-    private ConcurrentHashMap<Long, byte[]> stream1;
+    private NonBlockingHashMap<Long, byte[]> stream1;
 
     public StreamReceiver() {
-        stream1 = new ConcurrentHashMap<>();
+        stream1 = new NonBlockingHashMap<>();
 
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
@@ -61,12 +61,8 @@ public class StreamReceiver {
                         e.printStackTrace();
                     }
                 }
-                decodeVtpPayload(stream1.get(i));
-                System.out.println(stream1.containsKey(i));
+                //decodeVtpPayload(stream1.get(i));
                 stream1.remove(i);
-                System.out.println(stream1.containsKey(i));
-
-
             }
         };
 
