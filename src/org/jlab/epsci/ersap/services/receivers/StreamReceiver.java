@@ -135,7 +135,7 @@ public class StreamReceiver {
 
                  stream1.put(record_number, dataBuffer);
                 if(record_number == 1){
-                    System.out.printf("put "+record_number+ " "+stream1.contains(record_number));
+                    System.out.printf("put "+record_number+ " "+stream1.get(record_number).length);
                 }
 
 //                decodeVtpPayload(dataBuffer);
