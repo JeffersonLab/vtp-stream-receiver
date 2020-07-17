@@ -46,6 +46,7 @@ public class StreamReceiver {
                     }
                     decodeVtpPayload(stream1.get(i));
                     stream1.remove(i);
+                    System.out.println(i);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
