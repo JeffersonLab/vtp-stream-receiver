@@ -81,23 +81,20 @@ public class StreamReceiver {
 
             int format_version = Integer.reverseBytes(dataInputStream.readInt());
             int flags = Integer.reverseBytes(dataInputStream.readInt());
-//            long record_number = Long.reverseBytes(dataInputStream.readLong());
-//            long ts_sec = Long.reverseBytes(dataInputStream.readLong());
-//            long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
             long record_number = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
             long ts_sec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
             long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
 
 
-            System.out.println("source_id         = " + Integer.toHexString(source_id));
-            System.out.println("total_length      = " + total_length);
-            System.out.println("payload_length    = " + payload_length);
-            System.out.println("compressed_length = " + compressed_length);
-            System.out.println("magic             = " + Integer.toHexString(magic));
-            System.out.println("format_version    = " + Integer.toHexString(format_version));
-            System.out.println("record_number     = " + record_number);
-            System.out.println("ts_sec            = " + ts_sec);
-            System.out.println("ts_nsec           = " + ts_nsec);
+//            System.out.println("source_id         = " + Integer.toHexString(source_id));
+//            System.out.println("total_length      = " + total_length);
+//            System.out.println("payload_length    = " + payload_length);
+//            System.out.println("compressed_length = " + compressed_length);
+//            System.out.println("magic             = " + Integer.toHexString(magic));
+//            System.out.println("format_version    = " + Integer.toHexString(format_version));
+//            System.out.println("record_number     = " + record_number);
+//            System.out.println("ts_sec            = " + ts_sec);
+//            System.out.println("ts_nsec           = " + ts_nsec);
 
             missed_record = missed_record + (record_number - (prev_rec_number + 1));
             prev_rec_number = record_number;
