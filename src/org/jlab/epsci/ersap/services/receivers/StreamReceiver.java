@@ -54,10 +54,9 @@ public class StreamReceiver {
 
         Runnable runnable = () -> {
              for (long i = 0; i < Long.MAX_VALUE; i++) {
-                 while(!stream1.contains(i)){
+                 while(!stream1.containsKey(i)){
                      try {
-                         Thread.sleep(1000);
-                         System.out.println(i);
+                         Thread.sleep(1);
                      } catch (InterruptedException e) {
                          e.printStackTrace();
                      }
