@@ -53,16 +53,20 @@ public class StreamReceiver {
         }
 
         Runnable runnable = () -> {
-             for (long i = 0; i < Long.MAX_VALUE; i++) {
-                 while(!stream1.containsKey(i)){
-                     try {
-                         Thread.sleep(1);
-                     } catch (InterruptedException e) {
-                         e.printStackTrace();
-                     }
-                 }
+            for (long i = 0; i < Long.MAX_VALUE; i++) {
+                while (!stream1.containsKey(i)) {
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 decodeVtpPayload(stream1.get(i));
+                System.out.println(stream1.containsKey(i));
                 stream1.remove(i);
+                System.out.println(stream1.containsKey(i));
+
+
             }
         };
 
