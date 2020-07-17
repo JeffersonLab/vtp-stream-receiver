@@ -81,12 +81,12 @@ public class StreamReceiver {
 
             int format_version = Integer.reverseBytes(dataInputStream.readInt());
             int flags = Integer.reverseBytes(dataInputStream.readInt());
-            long record_number = Long.reverseBytes(dataInputStream.readLong());
-            long ts_sec = Long.reverseBytes(dataInputStream.readLong());
-            long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
-//            long record_number = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
-//            long ts_sec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
-//            long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
+//            long record_number = Long.reverseBytes(dataInputStream.readLong());
+//            long ts_sec = Long.reverseBytes(dataInputStream.readLong());
+//            long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
+            long record_number = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
+            long ts_sec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
+            long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
 
 
             System.out.println("source_id         = " + Integer.toHexString(source_id));
