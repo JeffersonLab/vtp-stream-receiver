@@ -80,6 +80,7 @@ public class StreamReceiver {
             int magic = Integer.reverseBytes(dataInputStream.readInt());
 
             int format_version = Integer.reverseBytes(dataInputStream.readInt());
+            int flags = Integer.reverseBytes(dataInputStream.readInt());
             long record_number = Long.reverseBytes(dataInputStream.readLong());
             long ts_sec = Long.reverseBytes(dataInputStream.readLong());
             long ts_nsec = Long.reverseBytes(dataInputStream.readLong());
@@ -101,7 +102,7 @@ public class StreamReceiver {
             missed_record = missed_record + (record_number - (prev_rec_number + 1));
             prev_rec_number = record_number;
 
-            byte[] dataBuffer = new byte[total_length - (12 * 4)];
+            byte[] dataBuffer = new byte[total_length - (13 * 4)];
             dataInputStream.readFully(dataBuffer);
 
             totalData = totalData + (double) total_length / 1000.0;
