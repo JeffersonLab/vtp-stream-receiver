@@ -67,7 +67,7 @@ public class StreamReceiver {
         };
 
         Thread payloadProcessor = new Thread(runnable);
-        payloadProcessor.start();
+//        payloadProcessor.start();
 
     }
 
@@ -134,6 +134,7 @@ public class StreamReceiver {
                 dataInputStream.readFully(dataBuffer);
 
                 stream1.put(record_number, dataBuffer);
+                stream1.remove(record_number);
 
 //                decodeVtpPayload(dataBuffer);
 
