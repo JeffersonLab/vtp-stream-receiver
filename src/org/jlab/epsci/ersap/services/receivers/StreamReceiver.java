@@ -11,6 +11,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class StreamReceiver {
 
@@ -28,11 +30,31 @@ public class StreamReceiver {
     private long missed_record;
 
     private NonBlockingHashMap<Long, byte[]> stream1;
+
     public StreamReceiver() {
         stream1 = new NonBlockingHashMap<>();
 
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+             if(!stream1.isEmpty()){
+                 for (long i = 1; i < Long.MAX_VALUE; i++){
+                     if(stream1.contains(i)){
+                         decodeVtpPayload(stream1.get(i));
+                         stream1.remove(i);
+                     } else {
+                         try {
+                             Thread.sleep(10);
+                         } catch (InterruptedException e) {
+                             e.printStackTrace();
+                         }
+                     }
+                 }
+             }
+        });
+
 
         FRAME_TIME = Utility.toUnsignedBigInteger(ft_const);
         ServerSocket serverSocket;
@@ -114,7 +136,7 @@ public class StreamReceiver {
 
                 stream1.put(record_number,dataBuffer);
 
-                decodeVtpPayload(dataBuffer);
+//                decodeVtpPayload(dataBuffer);
 
                 totalData = totalData + (double) total_length / 1000.0;
                 rate++;
