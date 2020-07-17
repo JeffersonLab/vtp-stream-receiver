@@ -11,8 +11,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class StreamReceiver {
 
@@ -29,10 +28,10 @@ public class StreamReceiver {
     private long prev_rec_number;
     private long missed_record;
 
-    private NonBlockingHashMap<Long, byte[]> stream1;
+    private ConcurrentHashMap<Long, byte[]> stream1;
 
     public StreamReceiver() {
-        stream1 = new NonBlockingHashMap<>();
+        stream1 = new ConcurrentHashMap<>();
 
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
@@ -54,12 +53,14 @@ public class StreamReceiver {
         }
 
         Runnable runnable = () -> {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            for (long i = 0; i < Long.MAX_VALUE; i++) {
+             for (long i = 0; i < Long.MAX_VALUE; i++) {
+                 while(!stream1.contains(i)){
+                     try {
+                         Thread.sleep(1);
+                     } catch (InterruptedException e) {
+                         e.printStackTrace();
+                     }
+                 }
                 decodeVtpPayload(stream1.get(i));
                 stream1.remove(i);
             }
