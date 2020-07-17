@@ -42,7 +42,6 @@ public class StreamReceiver {
             for (long i = 0; i < Long.MAX_VALUE; i++) {
                 decodeVtpPayload(stream1.get(i));
                 stream1.remove(i);
-                System.out.println(i);
             }
         };
         payloadProcessor = new Thread(runnable);
