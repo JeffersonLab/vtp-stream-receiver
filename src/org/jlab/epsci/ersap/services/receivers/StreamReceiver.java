@@ -42,7 +42,7 @@ public class StreamReceiver {
             for (long i = 1; i < Long.MAX_VALUE; i++) {
                 try {
                     while (!stream1.contains(i)) {
-                        Thread.sleep(10);
+                        Thread.sleep(1000);
                         System.out.println("waiting "+i);
                     }
                     decodeVtpPayload(stream1.get(i));
@@ -133,7 +133,10 @@ public class StreamReceiver {
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
-                stream1.put(record_number, dataBuffer);
+                 stream1.put(record_number, dataBuffer);
+                if(record_number == 1){
+                    System.out.printf("put "+record_number+ " "+stream1.contains(record_number));
+                }
 
 //                decodeVtpPayload(dataBuffer);
 
