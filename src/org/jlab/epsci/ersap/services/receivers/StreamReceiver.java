@@ -30,6 +30,7 @@ public class StreamReceiver {
     private long missed_record;
 
     private NonBlockingHashMap<Long, byte[]> stream1;
+    private Thread payloadProcessor;
 
     public StreamReceiver() {
         stream1 = new NonBlockingHashMap<>();
@@ -37,23 +38,14 @@ public class StreamReceiver {
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            for (long i = 1; i < Long.MAX_VALUE; i++) {
-                try {
-                    while (!stream1.contains(i)) {
-                        Thread.sleep(1000);
-                        System.out.println("waiting "+i);
-                    }
-                    decodeVtpPayload(stream1.get(i));
-                    stream1.remove(i);
-                    System.out.println(i);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        Runnable runnable = () -> {
+            for (long i = 0; i < Long.MAX_VALUE; i++) {
+                decodeVtpPayload(stream1.get(i));
+                stream1.remove(i);
+                System.out.println(i);
             }
-        });
-
+        };
+        payloadProcessor = new Thread(runnable);
 
         FRAME_TIME = Utility.toUnsignedBigInteger(ft_const);
         ServerSocket serverSocket;
@@ -133,10 +125,8 @@ public class StreamReceiver {
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
-                 stream1.put(record_number, dataBuffer);
-                if(record_number == 1){
-                    System.out.printf("put "+record_number+ " "+stream1.get(record_number).length);
-                }
+                stream1.put(record_number, dataBuffer);
+                payloadProcessor.start();
 
 //                decodeVtpPayload(dataBuffer);
 
@@ -151,6 +141,7 @@ public class StreamReceiver {
     }
 
     private void decodeVtpPayload(byte[] payload) {
+        if (payload == null) return;
         ByteBuffer bb = ByteBuffer.wrap(payload);
         bb.order(ByteOrder.LITTLE_ENDIAN);
         int[] slot_ind = new int[8];
