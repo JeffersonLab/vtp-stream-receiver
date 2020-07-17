@@ -37,23 +37,24 @@ public class StreamReceiver {
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
 
-//        ExecutorService executor = Executors.newSingleThreadExecutor();
-//        executor.submit(() -> {
-//             if(!stream1.isEmpty()){
-//                 for (long i = 1; i < Long.MAX_VALUE; i++){
-//                     if(stream1.contains(i)){
-//                         decodeVtpPayload(stream1.get(i));
-//                         stream1.remove(i);
-//                     } else {
-//                         try {
-//                             Thread.sleep(10);
-//                         } catch (InterruptedException e) {
-//                             e.printStackTrace();
-//                         }
-//                     }
-//                 }
-//             }
-//        });
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+             if(!stream1.isEmpty()){
+                 for (long i = 1; i < Long.MAX_VALUE; i++){
+                     if(stream1.contains(i)){
+                         System.out.println(i);
+                         decodeVtpPayload(stream1.get(i));
+                         stream1.remove(i);
+                     } else {
+                         try {
+                             Thread.sleep(10);
+                         } catch (InterruptedException e) {
+                             e.printStackTrace();
+                         }
+                     }
+                 }
+             }
+        });
 
 
         FRAME_TIME = Utility.toUnsignedBigInteger(ft_const);
@@ -127,8 +128,7 @@ public class StreamReceiver {
                 long ts_sec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
                 long ts_nsec = Utility.llSwap(Long.reverseBytes(dataInputStream.readLong()));
                 long frame_time_ns = record_number * ft_const;
-                System.out.println(record_number);
-                System.exit(1);
+
                 missed_record = missed_record + (record_number - (prev_rec_number+1));
                 prev_rec_number = record_number;
 
