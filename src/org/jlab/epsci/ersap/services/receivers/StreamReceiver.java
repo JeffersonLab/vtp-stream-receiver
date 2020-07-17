@@ -56,7 +56,8 @@ public class StreamReceiver {
              for (long i = 0; i < Long.MAX_VALUE; i++) {
                  while(!stream1.contains(i)){
                      try {
-                         Thread.sleep(1);
+                         Thread.sleep(1000);
+                         System.out.println(i);
                      } catch (InterruptedException e) {
                          e.printStackTrace();
                      }
