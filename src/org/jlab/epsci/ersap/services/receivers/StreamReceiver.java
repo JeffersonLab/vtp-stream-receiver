@@ -43,6 +43,7 @@ public class StreamReceiver {
                 try {
                     while (!stream1.contains(i)) {
                         Thread.sleep(10);
+                        System.out.println("waiting "+i);
                     }
                     decodeVtpPayload(stream1.get(i));
                     stream1.remove(i);
