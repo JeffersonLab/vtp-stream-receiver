@@ -36,11 +36,11 @@ public class StreamReceiver {
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
 
-        dataLake = new Jedis("localhost");
-        System.out.println("DataLake connection succeeded. ");
-        System.out.println("DataLake ping - "+dataLake.ping());
-        System.out.println("DataLake info:");
-        System.out.println(dataLake.info());
+//        dataLake = new Jedis("localhost");
+//        System.out.println("DataLake connection succeeded. ");
+//        System.out.println("DataLake ping - "+dataLake.ping());
+//        System.out.println("DataLake info:");
+//        System.out.println(dataLake.info());
 
         FRAME_TIME = Utility.toUnsignedBigInteger(ft_const);
         ServerSocket serverSocket;
