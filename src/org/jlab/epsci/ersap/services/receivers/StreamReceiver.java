@@ -90,6 +90,8 @@ public class StreamReceiver {
             dataInputStream.readFully(dataBuffer);
 
             byte[] key =Utility.long2ByteArray(record_number);
+            dataLake.lpush("a","b");
+
 //            dataLake.lpush(key, dataBuffer);
 //            dataLake.lpop(key);
 
