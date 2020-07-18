@@ -1,8 +1,10 @@
 package org.jlab.epsci.ersap.services.receivers;
 
-import org.cliffc.high_scale_lib.NonBlockingHashMap;
+import org.jlab.clara.util.report.JsonUtils;
 import org.jlab.epsci.ersap.util.Utility;
+import redis.clients.jedis.Jedis;
 
+import javax.rmi.CORBA.Util;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
@@ -11,7 +13,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class StreamReceiver {
 
@@ -28,14 +29,18 @@ public class StreamReceiver {
     private long prev_rec_number;
     private long missed_record;
 
-    private NonBlockingHashMap<Long, byte[]> stream1;
+    private Jedis dataLake;
 
     public StreamReceiver() {
-        stream1 = new NonBlockingHashMap<>();
 
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
 
+        dataLake = new Jedis("localhost");
+        System.out.println("DataLake connection succeeded. ");
+        System.out.println("DataLake ping - "+dataLake.ping());
+        System.out.println("DataLake info:");
+        System.out.println(dataLake.info());
 
         FRAME_TIME = Utility.toUnsignedBigInteger(ft_const);
         ServerSocket serverSocket;
@@ -51,24 +56,6 @@ public class StreamReceiver {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        Runnable runnable = () -> {
-            for (long i = 0; i < Long.MAX_VALUE; i++) {
-                while (!stream1.containsKey(i)) {
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                //decodeVtpPayload(stream1.get(i));
-                stream1.remove(i);
-            }
-        };
-
-        Thread payloadProcessor = new Thread(runnable);
-//        payloadProcessor.start();
-
     }
 
     private void readSoftStream() {
@@ -101,6 +88,10 @@ public class StreamReceiver {
 
             byte[] dataBuffer = new byte[total_length - (13 * 4)];
             dataInputStream.readFully(dataBuffer);
+
+            byte[] key =Utility.long2ByteArray(record_number);
+            dataLake.lpush(key, dataBuffer);
+            dataLake.lpop(key);
 
             totalData = totalData + (double) total_length / 1000.0;
             rate++;

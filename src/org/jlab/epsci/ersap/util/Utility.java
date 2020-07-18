@@ -9,6 +9,7 @@ import java.nio.ByteOrder;
 public class Utility {
     private static byte[] i32 = new byte[4];
     private static byte[] i64 = new byte[8];
+
     public static short getUnsignedByte(ByteBuffer bb) {
         return ((short) (bb.get() & 0xff));
     }
@@ -136,5 +137,18 @@ public class Utility {
         long x = l >> 32;
         x = x | l << 32;
         return x;
+    }
+
+    public static byte[] long2ByteArray(long lng) {
+        byte[] b = new byte[]{
+                (byte) lng,
+                (byte) (lng >> 8),
+                (byte) (lng >> 16),
+                (byte) (lng >> 24),
+                (byte) (lng >> 32),
+                (byte) (lng >> 40),
+                (byte) (lng >> 48),
+                (byte) (lng >> 56)};
+        return b;
     }
 }
