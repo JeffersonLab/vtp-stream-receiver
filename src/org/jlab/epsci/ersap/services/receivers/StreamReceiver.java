@@ -89,7 +89,7 @@ public class StreamReceiver {
 
             byte[] key =Utility.long2ByteArray(record_number);
 
-//            dataLake.lpush(key, dataBuffer);
+            dataLake.lpush(key, dataBuffer);
 //            dataLake.lpop(key);
 
             totalData = totalData + (double) total_length / 1000.0;
@@ -124,8 +124,6 @@ public class StreamReceiver {
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
-//                stream1.put(record_number, dataBuffer);
-//                stream1.remove(record_number);
 //                decodeVtpPayload(dataBuffer);
 
                 totalData = totalData + (double) total_length / 1000.0;
@@ -221,7 +219,7 @@ public class StreamReceiver {
             if (loop <= 0) {
                 System.out.println("event rate =" + rate
                         + " Hz.  data rate =" + totalData + " kB/s." +
-                        " missed rate = " + missed_record + " Hz."+prev_rec_number);
+                        " missed rate = " + missed_record + " Hz.");
                 loop = 10;
             }
             rate = 0;
