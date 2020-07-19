@@ -89,7 +89,7 @@ public class StreamReceiver {
 
             byte[] key =Utility.long2ByteArray(record_number);
 
-//            dataLake.lpush(key, dataBuffer);
+            dataLake.lpush(key, dataBuffer);
 //            dataLake.lpop(key);
 
             totalData = totalData + (double) total_length / 1000.0;
