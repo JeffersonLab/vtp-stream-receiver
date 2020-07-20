@@ -1,7 +1,8 @@
 package org.jlab.epsci.ersap.services.receivers;
 
+import net.openhft.chronicle.map.ChronicleMapBuilder;
 import org.jlab.epsci.ersap.util.Utility;
-import redis.clients.jedis.Jedis;
+//import redis.clients.jedis.Jedis;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -10,6 +11,7 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -31,9 +33,15 @@ public class StreamReceiver {
     // redis..
     //    private Jedis dataLake;
 
-    private HashMap<Long, byte[]> dataLake_hm = new HashMap<>();
+    private Map<Long, byte[]> dataLake_hm;
 
     public StreamReceiver() {
+
+        try {
+            dataLake_hm = createChronicleMap();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
@@ -214,6 +222,12 @@ public class StreamReceiver {
 */
             }
         }
+    }
+
+    private Map<Long, byte[]> createChronicleMap() throws IOException {
+        File file = new File("/temp/dataLake.dat");
+        ChronicleMapBuilder<Long, byte[]> builder = ChronicleMapBuilder.of(Long.class,byte[].class);
+        return builder.createPersistedTo(file);
     }
 
     public void receiveSoftStream() {
