@@ -124,6 +124,11 @@ public class StreamReceiver {
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
+                byte[] key =Utility.long2ByteArray(record_number);
+
+//                dataLake.lpush(key, dataBuffer);
+//            dataLake.lpop(key);
+
 //                decodeVtpPayload(dataBuffer);
 
                 totalData = totalData + (double) total_length / 1000.0;
