@@ -126,7 +126,7 @@ public class StreamReceiver {
 
                 byte[] key =Utility.long2ByteArray(record_number);
 
-                dataLake.lpush(Long.toString(record_number), "a");
+//                dataLake.lpush(Long.toString(record_number), "a");
                 dataLake.lpush("a", "b");
 //                dataLake.lpush(key, dataBuffer);
 //            dataLake.lpop(key);
