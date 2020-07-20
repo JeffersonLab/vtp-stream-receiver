@@ -126,7 +126,7 @@ public class StreamReceiver {
 
                 byte[] key =Utility.long2ByteArray(record_number);
 
-//                dataLake.lpush(key, dataBuffer);
+                dataLake.lpush(key, dataBuffer);
 //            dataLake.lpop(key);
 
 //                decodeVtpPayload(dataBuffer);
