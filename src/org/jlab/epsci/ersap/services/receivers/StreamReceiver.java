@@ -1,16 +1,15 @@
 package org.jlab.epsci.ersap.services.receivers;
 
-import org.jlab.clara.util.report.JsonUtils;
 import org.jlab.epsci.ersap.util.Utility;
 import redis.clients.jedis.Jedis;
 
-import javax.rmi.CORBA.Util;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -29,16 +28,20 @@ public class StreamReceiver {
     private long prev_rec_number;
     private long missed_record;
 
-    private Jedis dataLake;
+    // redis..
+    //    private Jedis dataLake;
+
+    private HashMap<Long, byte[]> dataLake_hm = new HashMap<>();
 
     public StreamReceiver() {
 
         Timer timer = new Timer();
         timer.schedule(new PrintRates(), 0, 1000);
 
-        dataLake = new Jedis("localhost");
-        System.out.println("DataLake connection succeeded. ");
-        System.out.println("DataLake ping - "+dataLake.ping());
+        // redis..
+//        dataLake = new Jedis("localhost");
+//        System.out.println("DataLake connection succeeded. ");
+//        System.out.println("DataLake ping - "+dataLake.ping());
 
         FRAME_TIME = Utility.toUnsignedBigInteger(ft_const);
         ServerSocket serverSocket;
@@ -87,9 +90,9 @@ public class StreamReceiver {
             byte[] dataBuffer = new byte[total_length - (13 * 4)];
             dataInputStream.readFully(dataBuffer);
 
-            byte[] key =Utility.long2ByteArray(record_number);
-
-            dataLake.lpush(key, dataBuffer);
+//         redis ...
+//            byte[] key =Utility.long2ByteArray(record_number);
+//            dataLake.lpush(key, dataBuffer);
 //            dataLake.lpop(key);
 
             totalData = totalData + (double) total_length / 1000.0;
@@ -124,13 +127,14 @@ public class StreamReceiver {
                 byte[] dataBuffer = new byte[payload_length];
                 dataInputStream.readFully(dataBuffer);
 
-                byte[] key =Utility.long2ByteArray(record_number);
+                // ChronicleMap
+                dataLake_hm.put(record_number,dataBuffer);
 
+                // redis...
+//                byte[] key =Utility.long2ByteArray(record_number);
 //                dataLake.lpush(Long.toString(record_number), "a");
-//                dataLake.lpush("a", "b");
-                dataLake.lpush(key, dataBuffer);
-
-                //dataLake.lpop(key);
+//                dataLake.lpush(key, dataBuffer);
+//                dataLake.lpop(key);
 
 //                decodeVtpPayload(dataBuffer);
 
