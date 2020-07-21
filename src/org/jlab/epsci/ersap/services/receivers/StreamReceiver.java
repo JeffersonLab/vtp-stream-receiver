@@ -30,7 +30,6 @@ public class StreamReceiver {
 
     // redis..
     //    private Jedis dataLake;
-
     private Map<Long, byte[]> dataLake_hm;
 
     public StreamReceiver() {
