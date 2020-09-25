@@ -1,9 +1,9 @@
 package org.jlab.epsci.ersap.matrix;
 
-import org.apache.commons.math3.linear.Array2DRowRealMatrix;
-import org.apache.commons.math3.linear.DecompositionSolver;
-import org.apache.commons.math3.linear.LUDecomposition;
-import org.apache.commons.math3.linear.RealMatrix;
+//import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+//import org.apache.commons.math3.linear.DecompositionSolver;
+//import org.apache.commons.math3.linear.LUDecomposition;
+//import org.apache.commons.math3.linear.RealMatrix;
 
 public class MatrixInverse {
 
@@ -26,13 +26,13 @@ public class MatrixInverse {
         };
 
         // Solving AB = I for given A
-        RealMatrix A = new Array2DRowRealMatrix(values);
-        System.out.println("Input A: " + A);
-        DecompositionSolver solver = new LUDecomposition(A).getSolver();
+//        RealMatrix A = new Array2DRowRealMatrix(values);
+//        System.out.println("Input A: " + A);
+//        DecompositionSolver solver = new LUDecomposition(A).getSolver();
 
-        RealMatrix I = new Array2DRowRealMatrix(rhs);
-        RealMatrix B = solver.solve(I);
-        System.out.println("Inverse B: " + B);
+//        RealMatrix I = new Array2DRowRealMatrix(rhs);
+//        RealMatrix B = solver.solve(I);
+//        System.out.println("Inverse B: " + B);
     }
 
 }
